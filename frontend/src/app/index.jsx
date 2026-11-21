@@ -116,12 +116,12 @@ export default function HomeScreen() {
   const fetchHospitals = async (explicitCoords = null) => {
     try {
       setLoadingHospitals(true);
-      const coords = explicitCoords || userCoords;
+      const activeCoords = explicitCoords || coords;
       let res = null;
-      if (coords?.latitude && coords?.longitude) {
+      if (activeCoords?.latitude && activeCoords?.longitude) {
         res = await getNearbyHospitals({
-          latitude: coords.latitude,
-          longitude: coords.longitude,
+          latitude: activeCoords.latitude,
+          longitude: activeCoords.longitude,
           radiusKm: 35,
         });
       } else {
@@ -731,7 +731,7 @@ export default function HomeScreen() {
         onClose={() => setCityModalVisible(false)}
         title={t('home.selectGujaratCity') || 'Select Gujarat City'}
         data={GUJARAT_CITY_OPTIONS}
-        selectedItem={currentCity}
+        selectedItem={locationDetails?.city || ''}
         onSelect={handleSelectCity}
         placeholder="Search cities across Gujarat (Dwarka, Jamnagar, Surat...)"
       />
