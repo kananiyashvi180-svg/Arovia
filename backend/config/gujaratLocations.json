@@ -1,0 +1,422 @@
+{
+  "source": "Local Government Directory (LGD), Ministry of Panchayati Raj, Government of India & Gujarat Revenue Department",
+  "lastUpdated": "2026",
+  "state": "Gujarat",
+  "districts": [
+    {
+      "name": "Ahmedabad",
+      "cities": [
+        { "name": "Ahmedabad City", "taluka": "Ahmedabad City", "areas": ["Navrangpura", "Satellite", "Vastrapur", "Bodakdev", "Maninagar", "Paldi", "Ghatlodia", "Naranpura", "Bopal", "Chandkheda", "Thaltej", "Ellisbridge", "Prahlad Nagar", "SG Highway"] },
+        { "name": "Sanand", "taluka": "Sanand", "areas": ["Sanand GIDC", "Shela", "Telav", "Chekhla", "Nidhrad", "Godhavi"] },
+        { "name": "Dholka", "taluka": "Dholka", "areas": ["Dholka Rural", "Koth", "Ganeshsar", "Saroda", "Rampur"] },
+        { "name": "Bavla", "taluka": "Bavla", "areas": ["Bavla Market", "Adroda", "Chiyada", "Kerala GIDC", "Kavitha"] },
+        { "name": "Dhandhuka", "taluka": "Dhandhuka", "areas": ["Dhandhuka Town", "Fedara", "Tagadi", "Rayka", "Khadol"] },
+        { "name": "Viramgam", "taluka": "Viramgam", "areas": ["Viramgam City", "Hansalpur GIDC", "Mandal Road", "Jakhwada"] },
+        { "name": "Mandal", "taluka": "Mandal", "areas": ["Mandal Town", "Trent", "Kadvasan", "Nayka"] },
+        { "name": "Detroj-Rampura", "taluka": "Detroj-Rampura", "areas": ["Detroj", "Rampura", "Bhankoda", "Gunjala"] },
+        { "name": "Dholera", "taluka": "Dholera", "areas": ["Dholera SIR", "Bhangadh", "Bavliyari", "Sandhida"] }
+      ]
+    },
+    {
+      "name": "Amreli",
+      "cities": [
+        { "name": "Amreli", "taluka": "Amreli", "areas": ["Station Road", "Chital", "Vadiya", "Bhavnagar Road", "Rajkot Road"] },
+        { "name": "Babra", "taluka": "Babra", "areas": ["Babra Town", "Khari", "Chamardi", "Garniya"] },
+        { "name": "Dhari", "taluka": "Dhari", "areas": ["Dhari Town", "Chalala", "Dalkhaniya", "Gigasan"] },
+        { "name": "Jafrabad", "taluka": "Jafrabad", "areas": ["Port Area", "Rohisa", "Mitiyala", "Lunsapur"] },
+        { "name": "Khambha", "taluka": "Khambha", "areas": ["Khambha Bazar", "Dedan", "Barman", "Dhareshwar"] },
+        { "name": "Kunkavav Vadia", "taluka": "Kunkavav Vadia", "areas": ["Vadia", "Kunkavav Moti", "Bariya", "Khakhariya"] },
+        { "name": "Lathi", "taluka": "Lathi", "areas": ["Lathi City", "Damnagar", "Chavand", "Dhebi"] },
+        { "name": "Lilia", "taluka": "Lilia", "areas": ["Lilia Mota", "Kalyanpur", "Panchtalavda", "Gundaran"] },
+        { "name": "Rajula", "taluka": "Rajula", "areas": ["Pipavav Port", "Rajula City", "Kovaya", "Dungar", "Chhatradi"] },
+        { "name": "Savarkundla", "taluka": "Savarkundla", "areas": ["Mahuva Road", "Khadsali", "Mitiyala", "Vanda"] },
+        { "name": "Bagasara", "taluka": "Bagasara", "areas": ["Bagasara Market", "Haldharu", "Kadaya", "Natvarnagar"] }
+      ]
+    },
+    {
+      "name": "Anand",
+      "cities": [
+        { "name": "Anand", "taluka": "Anand", "areas": ["Amul Dairy Road", "Vidyanagar", "Gamdi", "Bakrol", "Karamsad", "Mogri"] },
+        { "name": "Anklav", "taluka": "Anklav", "areas": ["Anklav Town", "Bhetasi", "Asarma", "Koshindra"] },
+        { "name": "Borsad", "taluka": "Borsad", "areas": ["Borsad City", "Vasad", "Alarsa", "Davol", "Kavitha"] },
+        { "name": "Khambhat", "taluka": "Khambhat", "areas": ["Khambhat Port", "Shakarpur", "Kansari", "Kanzat", "Undel"] },
+        { "name": "Petlad", "taluka": "Petlad", "areas": ["Petlad Town", "Bandhani", "Dharmaj", "Sunav", "Demol"] },
+        { "name": "Sojitra", "taluka": "Sojitra", "areas": ["Sojitra Town", "Piplav", "Malataj", "Kasor"] },
+        { "name": "Tarapur", "taluka": "Tarapur", "areas": ["Tarapur Crossroads", "Moraj", "Mil-Rampur", "Dugari"] },
+        { "name": "Umreth", "taluka": "Umreth", "areas": ["Umreth City", "Dakor Road", "Thamna", "Sureli"] }
+      ]
+    },
+    {
+      "name": "Aravalli",
+      "cities": [
+        { "name": "Modasa", "taluka": "Modasa", "areas": ["Modasa GIDC", "Malpur Road", "Dhansura Road", "Tintoi"] },
+        { "name": "Bayad", "taluka": "Bayad", "areas": ["Bayad Town", "Demai", "Sathamba", "Amodra"] },
+        { "name": "Bhiloda", "taluka": "Bhiloda", "areas": ["Bhiloda Town", "Shamlaji", "Mankroda", "Takhatpur"] },
+        { "name": "Dhansura", "taluka": "Dhansura", "areas": ["Dhansura Town", "Rahiyol", "Vadol", "Shinwad"] },
+        { "name": "Malpur", "taluka": "Malpur", "areas": ["Malpur Town", "Helodar", "Magodi", "Vavdi"] },
+        { "name": "Meghraj", "taluka": "Meghraj", "areas": ["Meghraj Town", "Isari", "Kumbhera", "Vanka"] }
+      ]
+    },
+    {
+      "name": "Banaskantha",
+      "cities": [
+        { "name": "Palanpur", "taluka": "Palanpur", "areas": ["Delhi Gate", "Gathaman", "Kanodar", "Chadotar", "Aroma Circle"] },
+        { "name": "Deesa", "taluka": "Deesa", "areas": ["Deesa Highway", "Gayatri Mandir", "Bhildi", "Juna Deesa", "Dhanera Road"] },
+        { "name": "Dhanera", "taluka": "Dhanera", "areas": ["Dhanera Town", "Thawar", "Karada", "Ramsan"] },
+        { "name": "Tharad", "taluka": "Tharad", "areas": ["Tharad City", "Gadhsisisar", "Piluda", "Dodgam"] },
+        { "name": "Vav", "taluka": "Vav", "areas": ["Vav Town", "Suigam Road", "Mavsari", "Kharadpura"] },
+        { "name": "Danta", "taluka": "Danta", "areas": ["Ambaji", "Danta Town", "Koteshwar", "Hadad"] },
+        { "name": "Vadgam", "taluka": "Vadgam", "areas": ["Chhapi", "Majadar", "Mahi", "Galsana"] },
+        { "name": "Kankrej", "taluka": "Kankrej", "areas": ["Shihori", "Thara", "Khariya", "Un"] },
+        { "name": "Deodar", "taluka": "Deodar", "areas": ["Deodar Town", "Rantiya", "Kotda", "Soni"] },
+        { "name": "Bhabhar", "taluka": "Bhabhar", "areas": ["Bhabhar Market", "Mithan", "Suvali", "Khara"] },
+        { "name": "Lakhani", "taluka": "Lakhani", "areas": ["Lakhani Town", "Devaliya", "Jasra", "Morikha"] },
+        { "name": "Suigam", "taluka": "Suigam", "areas": ["Suigam Border", "Radhanpur Road", "Jorawargadh"] }
+      ]
+    },
+    {
+      "name": "Bharuch",
+      "cities": [
+        { "name": "Bharuch", "taluka": "Bharuch", "areas": ["Zadeshwar", "Bholav", "GNFC Township", "Station Road", "Dahej Bypass"] },
+        { "name": "Ankleshwar", "taluka": "Ankleshwar", "areas": ["GIDC Ankleshwar", "Valia Road", "Hansot Road", "Piraman"] },
+        { "name": "Jambusar", "taluka": "Jambusar", "areas": ["Jambusar Town", "Kavi", "Magnad", "Tankari"] },
+        { "name": "Amod", "taluka": "Amod", "areas": ["Amod Town", "Achhod", "Ranada", "Sarbhan"] },
+        { "name": "Vagra", "taluka": "Vagra", "areas": ["Dahej SEZ", "Vagra Town", "Suva", "Vilayat GIDC"] },
+        { "name": "Hansot", "taluka": "Hansot", "areas": ["Hansot Town", "Ilav", "Kantiyajal", "Sunevkalla"] },
+        { "name": "Jhagadia", "taluka": "Jhagadia", "areas": ["Jhagadia GIDC", "Umaralla", "Fulwadi", "Bhilwada"] },
+        { "name": "Netrang", "taluka": "Netrang", "areas": ["Netrang Crossroads", "Bhilod", "Chasvad", "Kavachia"] },
+        { "name": "Valia", "taluka": "Valia", "areas": ["Valia Town", "Desad", "Dungri", "Kondh"] }
+      ]
+    },
+    {
+      "name": "Bhavnagar",
+      "cities": [
+        { "name": "Bhavnagar", "taluka": "Bhavnagar", "areas": ["Waghawadi Road", "Kalanala", "Ghogha Circle", "Subhashnagar", "Chitra GIDC", "Sidsar"] },
+        { "name": "Alang", "taluka": "Talaja", "areas": ["Alang Ship Breaking Yard", "Sosiya", "Manar"] },
+        { "name": "Palitana", "taluka": "Palitana", "areas": ["Shatrunjay Foothills", "Taleti Road", "Gariyadhar Road", "Rohishala"] },
+        { "name": "Mahuva", "taluka": "Mahuva", "areas": ["Bhadrod", "Mahuva Port", "Bagdana", "Otha", "Kalsar"] },
+        { "name": "Talaja", "taluka": "Talaja", "areas": ["Talaja Town", "Trapaj", "Sartanpar", "Borda"] },
+        { "name": "Sihor", "taluka": "Sihor", "areas": ["Sihor GIDC", "Songadh", "Vartej", "Tana"] },
+        { "name": "Gadhada", "taluka": "Gadhada", "areas": ["Swaminarayan Temple Area", "Ningala", "Dhasa", "Vikaliya"] },
+        { "name": "Ghogha", "taluka": "Ghogha", "areas": ["Ro-Pax Ferry Terminal", "Kuda", "Hathab", "Bhavnagar Port"] },
+        { "name": "Vallabhipur", "taluka": "Vallabhipur", "areas": ["Vallabhipur Town", "Chamardi", "Navagam", "Kalyanpur"] },
+        { "name": "Jesar", "taluka": "Jesar", "areas": ["Jesar Town", "Sapar", "Kotda", "Morba"] },
+        { "name": "Umrala", "taluka": "Umrala", "areas": ["Umrala Town", "Rampura", "Dhola", "Bhojavadar"] }
+      ]
+    },
+    {
+      "name": "Botad",
+      "cities": [
+        { "name": "Botad", "taluka": "Botad", "areas": ["Station Road", "Salangpur Road", "Paliyad", "Haddad", "Lakhanka"] },
+        { "name": "Salangpur", "taluka": "Barwala", "areas": ["Hanumanji Temple Area", "Karanj", "Kundal"] },
+        { "name": "Barwala", "taluka": "Barwala", "areas": ["Barwala Town", "Navda", "Ranpur Road", "Bhimnath"] },
+        { "name": "Ranpur", "taluka": "Ranpur", "areas": ["Ranpur Town", "Kinkariya", "Dhandhuka Road", "Umrala"] }
+      ]
+    },
+    {
+      "name": "Chhota Udepur",
+      "cities": [
+        { "name": "Chhota Udepur", "taluka": "Chhota Udepur", "areas": ["Rajmahal Road", "Station Area", "Bodeli Road", "Tejgadh"] },
+        { "name": "Bodeli", "taluka": "Bodeli", "areas": ["Bodeli Market", "Alipura", "Dharmapuri", "Jabugam"] },
+        { "name": "Sankheda", "taluka": "Sankheda", "areas": ["Sankheda Lacquerware Market", "Bahadarpur", "Hareshwar"] },
+        { "name": "Jetpur Pavi", "taluka": "Jetpur Pavi", "areas": ["Pavi Jetpur Town", "Kadvila", "Vavdi", "Panibar"] },
+        { "name": "Kavant", "taluka": "Kavant", "areas": ["Kavant Town", "Hamirpur", "Panvad", "Mogra"] },
+        { "name": "Nasvadi", "taluka": "Nasvadi", "areas": ["Nasvadi Town", "Haripura", "Kukarda", "Sindhikuwa"] }
+      ]
+    },
+    {
+      "name": "Dahod",
+      "cities": [
+        { "name": "Dahod", "taluka": "Dahod", "areas": ["Station Road", "Godi Road", "Chakaliya Road", "Raska", "Bavka"] },
+        { "name": "Jhalod", "taluka": "Jhalod", "areas": ["Jhalod Town", "Limdi", "Kadwal", "Varod"] },
+        { "name": "Devgadh Baria", "taluka": "Devgadh Baria", "areas": ["Baria Town", "Piplod", "Sagtala", "Dudhiya"] },
+        { "name": "Garbada", "taluka": "Garbada", "areas": ["Garbada Town", "Gangardi", "Patiya", "Bhe"] },
+        { "name": "Limkheda", "taluka": "Limkheda", "areas": ["Limkheda Town", "Dudhia", "Singvad Road"] },
+        { "name": "Fatepura", "taluka": "Fatepura", "areas": ["Fatepura Town", "Sukhsar", "Afwa", "Patel Faliya"] },
+        { "name": "Dhanpur", "taluka": "Dhanpur", "areas": ["Dhanpur Town", "Kanjeta", "Pipariya", "Unda"] },
+        { "name": "Sanjeli", "taluka": "Sanjeli", "areas": ["Sanjeli Town", "Mandli", "Nenki", "Bamana"] },
+        { "name": "Singvad", "taluka": "Singvad", "areas": ["Singvad Town", "Dabhva", "Ratanpur"] }
+      ]
+    },
+    {
+      "name": "Dang",
+      "cities": [
+        { "name": "Ahwa", "taluka": "Ahwa", "areas": ["Collector Office Area", "Civil Hospital Road", "Bhavandagur", "Gadhvi"] },
+        { "name": "Saputara", "taluka": "Waghai", "areas": ["Hill Station Center", "Sunset Point", "Lake View", "Navagam"] },
+        { "name": "Waghai", "taluka": "Waghai", "areas": ["Botanical Garden", "Ambapada", "Dharampur Road", "Zari"] },
+        { "name": "Subir", "taluka": "Subir", "areas": ["Subir Town", "Pimpalner Road", "Pipaldahad", "Shabari Dham"] }
+      ]
+    },
+    {
+      "name": "Devbhumi Dwarka",
+      "cities": [
+        { "name": "Dwarka", "taluka": "Dwarka", "areas": ["Dwarkadhish Temple Area", "Shivrajpur Beach", "Rupen Harbour", "Baradia", "Mithapur"] },
+        { "name": "Khambhalia", "taluka": "Khambhalia", "areas": ["Station Road", "Reliance Greens Area", "Salaya", "Shaktinagar", "Milan Char Rasta"] },
+        { "name": "Kalyanpur", "taluka": "Kalyanpur", "areas": ["Kalyanpur Town", "Bhatiya", "Rawal", "Bankodi", "Ran"] },
+        { "name": "Bhanvad", "taluka": "Bhanvad", "areas": ["Bhanvad Town", "Ghumli", "Morzar", "Verad", "Khatia"] }
+      ]
+    },
+    {
+      "name": "Gandhinagar",
+      "cities": [
+        { "name": "Gandhinagar City", "taluka": "Gandhinagar", "areas": ["Sector 1-30", "Infocity", "GIFT City", "Koba", "Kudasan", "Randesan", "Sargasan", "Pethapur", "Vavol"] },
+        { "name": "Kalol", "taluka": "Kalol", "areas": ["Kalol GIDC", "Panchvati", "Chhatral GIDC", "Saij", "Borisana", "Vansajada"] },
+        { "name": "Dahegam", "taluka": "Dahegam", "areas": ["Dahegam Town", "Bahiyal", "Rakhiyal", "Zundal Road", "Zakirana"] },
+        { "name": "Mansa", "taluka": "Mansa", "areas": ["Mansa City", "Itadra", "Lodra", "Amrapur", "Charada"] }
+      ]
+    },
+    {
+      "name": "Gir Somnath",
+      "cities": [
+        { "name": "Veraval", "taluka": "Veraval", "areas": ["Somnath Temple Area", "Veraval Port", "Prabhas Patan", "Bhalpara", "Dari", "Rajendra Bhuvan Road"] },
+        { "name": "Talala", "taluka": "Talala", "areas": ["Gir Sasan Road", "Talala Kesar Market", "Borvav", "Ankolwadi", "Bhojde"] },
+        { "name": "Kodinar", "taluka": "Kodinar", "areas": ["Ambuja Cement Plant Area", "Mul Dwarka", "Alidar", "Chhara Port", "Panch Pipalva"] },
+        { "name": "Una", "taluka": "Una", "areas": ["Una City", "Delwada", "Ahmedpur Mandvi", "Gupt Prayag", "Nava Bandar"] },
+        { "name": "Sutrapada", "taluka": "Sutrapada", "areas": ["GHCL Plant Area", "Prasnavada", "Dhamlej", "Lodhwa"] },
+        { "name": "Gir Gadhada", "taluka": "Gir Gadhada", "areas": ["Gir Gadhada Town", "Droneshwar", "Jamwala", "Harmadiya"] }
+      ]
+    },
+    {
+      "name": "Jamnagar",
+      "cities": [
+        { "name": "Jamnagar", "taluka": "Jamnagar", "areas": ["Digjam Circle", "Bedeshwar", "Patel Colony", "Indira Marg", "Khodiyar Colony", "Gulabnagar", "Reliance Greens / Motikhavdi"] },
+        { "name": "Dhrol", "taluka": "Dhrol", "areas": ["Dhrol City", "Latipur", "Kharva", "Jayva"] },
+        { "name": "Jodiya", "taluka": "Jodiya", "areas": ["Jodiya Port", "Balambha", "Khadba", "Kunad"] },
+        { "name": "Kalavad", "taluka": "Kalavad", "areas": ["Kalavad City", "Khandhera", "Nikava", "Bhavabhi Khijadiya"] },
+        { "name": "Lalpur", "taluka": "Lalpur", "areas": ["Lalpur Town", "Padana", "Khatiya", "Govana"] },
+        { "name": "Jamjodhpur", "taluka": "Jamjodhpur", "areas": ["Jamjodhpur Town", "Gingani", "Sheth Vadala", "Vansjalia"] }
+      ]
+    },
+    {
+      "name": "Junagadh",
+      "cities": [
+        { "name": "Junagadh", "taluka": "Junagadh", "areas": ["Girnar Taleti", "Moti Baug", "Zanzarda Road", "Kalwa Chowk", "Bilkha", "Majevadi"] },
+        { "name": "Keshod", "taluka": "Keshod", "areas": ["Airport Road", "Char Chowk", "Mangrol Road", "Agatrai"] },
+        { "name": "Mangrol", "taluka": "Mangrol", "areas": ["Mangrol Bandar", "Lathodra", "Sherbaug", "Shil"] },
+        { "name": "Manavadar", "taluka": "Manavadar", "areas": ["Manavadar City", "Bantva", "Pajod", "Koyla"] },
+        { "name": "Maliya Hatina", "taluka": "Maliya Hatina", "areas": ["Maliya Town", "Bhanduri", "Khorasa", "Aambalghadh"] },
+        { "name": "Visavadar", "taluka": "Visavadar", "areas": ["Satadhar Road", "Bhesan Road", "Kankai", "Moniya"] },
+        { "name": "Mendarda", "taluka": "Mendarda", "areas": ["Mendarda Town", "Khadpipli", "Arajpur", "Nani Khodiyar"] },
+        { "name": "Vanthali", "taluka": "Vanthali", "areas": ["Vanthali Town", "Kajleshwar", "Shapur", "Lushala"] },
+        { "name": "Bhesan", "taluka": "Bhesan", "areas": ["Bhesan Town", "Ranpur", "Parbata", "Chuda"] }
+      ]
+    },
+    {
+      "name": "Kheda",
+      "cities": [
+        { "name": "Nadiad", "taluka": "Nadiad", "areas": ["Santram Mandir Area", "College Road", "Dabhan", "Pij Road", "Uttarsanda", "Vaso Road"] },
+        { "name": "Kheda", "taluka": "Kheda", "areas": ["National Highway 48", "Nayka", "Vataman Road", "Raska"] },
+        { "name": "Kapadvanj", "taluka": "Kapadvanj", "areas": ["Kapadvanj City", "Antroli", "Torna", "Alampur"] },
+        { "name": "Mahudha", "taluka": "Mahudha", "areas": ["Mahudha Town", "Kathlal Road", "Alina", "Finav"] },
+        { "name": "Matar", "taluka": "Matar", "areas": ["Matar Town", "Traj", "Limbasi", "Radhu"] },
+        { "name": "Mehmedabad", "taluka": "Mehmedabad", "areas": ["Siddhivinayak Temple Area", "Khatraj GIDC", "Ghodasar", "Modaj"] },
+        { "name": "Thasra", "taluka": "Thasra", "areas": ["Dakor Holy Town", "Thasra Town", "Galteshwar", "Sui"] },
+        { "name": "Kathlal", "taluka": "Kathlal", "areas": ["Kathlal Town", "Porda", "Lasundra", "Bhagvanji Na Muvada"] },
+        { "name": "Vaso", "taluka": "Vaso", "areas": ["Vaso Town", "Palana", "Gangapur", "Lalpura"] },
+        { "name": "Galteshwar", "taluka": "Galteshwar", "areas": ["Sevaliya", "Ambav", "Galteshwar Temple Area"] }
+      ]
+    },
+    {
+      "name": "Kutch",
+      "cities": [
+        { "name": "Bhuj", "taluka": "Bhuj", "areas": ["Jubilee Ground", "Madhapar", "Mundra Road", "Mirzapar", "Kodial", "Sukhpar", "Bhujodi"] },
+        { "name": "Gandhidham", "taluka": "Gandhidham", "areas": ["Oslo Circle", "Tagore Road", "Adipur", "Shinay", "Galpadar"] },
+        { "name": "Kandla", "taluka": "Gandhidham", "areas": ["Deendayal Port Area", "Kandla SEZ", "Old Kandla"] },
+        { "name": "Mundra", "taluka": "Mundra", "areas": ["Adani Port & SEZ", "Mundra Town", "Baroi", "Samagoga", "Dhrub"] },
+        { "name": "Anjar", "taluka": "Anjar", "areas": ["Anjar City", "Varshamedi", "Welspun City", "Ratnal", "Meghpar"] },
+        { "name": "Mandvi", "taluka": "Mandvi", "areas": ["Vijay Vilas Palace Area", "Mandvi Port", "Wind Farm Beach", "Maska", "Gadhsisa"] },
+        { "name": "Nakhatrana", "taluka": "Nakhatrana", "areas": ["Nakhatrana Town", "Kotda", "Ravapar", "Manjal", "Vithon"] },
+        { "name": "Abdasa", "taluka": "Abdasa", "areas": ["Naliya", "Kothara", "Jakhau Port", "Tera"] },
+        { "name": "Lakhpat", "taluka": "Lakhpat", "areas": ["Panandhro", "Dayapar", "Narayan Sarovar", "Koteshwar"] },
+        { "name": "Rapar", "taluka": "Rapar", "areas": ["Rapar Town", "Dholavira (Harappan Site)", "Adesar", "Gedi"] },
+        { "name": "Bhachau", "taluka": "Bhachau", "areas": ["Bhachau City", "Chobari", "Samakhiali", "Vondh"] }
+      ]
+    },
+    {
+      "name": "Mahisagar",
+      "cities": [
+        { "name": "Lunawada", "taluka": "Lunawada", "areas": ["Lunawada City", "Verama", "Kothamba", "Madhavas"] },
+        { "name": "Balasinor", "taluka": "Balasinor", "areas": ["Fossil Park (Raiyoli)", "Balasinor Town", "Othwad", "Sutaria"] },
+        { "name": "Santrampur", "taluka": "Santrampur", "areas": ["Santrampur Town", "Gothib", "Kadana Road", "Pratapgadh"] },
+        { "name": "Kadana", "taluka": "Kadana", "areas": ["Kadana Dam Colony", "Dithwas", "Malvan"] },
+        { "name": "Khanpur", "taluka": "Khanpur", "areas": ["Bakor", "Khanpur Town", "Limdiya", "Pandarva"] },
+        { "name": "Virpur", "taluka": "Virpur", "areas": ["Virpur Town", "Debhari", "Khatnal", "Saliya"] }
+      ]
+    },
+    {
+      "name": "Mehsana",
+      "cities": [
+        { "name": "Mehsana", "taluka": "Mehsana", "areas": ["Radhanpur Road", "Modhera Road", "Nagori", "Panchot", "ONGC Colony", "Dudh Sagar Dairy Area"] },
+        { "name": "Kadi", "taluka": "Kadi", "areas": ["Kadi GIDC", "Kundal", "Budasan", "Nani Kadi", "Vadu"] },
+        { "name": "Visnagar", "taluka": "Visnagar", "areas": ["Visnagar City", "Kansa", "Valam", "Tarabh", "Udalpur"] },
+        { "name": "Vadnagar", "taluka": "Vadnagar", "areas": ["Vadnagar Heritage Town", "Sharmistha Lake", "Molipur", "Chhabaliya"] },
+        { "name": "Unjha", "taluka": "Unjha", "areas": ["Umiya Mata Temple Area", "Spices Market Yard", "Brahmanwada", "Aithor"] },
+        { "name": "Vijapur", "taluka": "Vijapur", "areas": ["Vijapur City", "Ladol", "Pilvai", "Kukrawada", "Falu"] },
+        { "name": "Becharaji", "taluka": "Becharaji", "areas": ["Bahucharaji Temple Area", "Mandal-Becharaji SIR", "Modhera Sun Temple", "Sankhari"] },
+        { "name": "Kheralu", "taluka": "Kheralu", "areas": ["Kheralu Town", "Dabhoda", "Malekpur", "Chada"] },
+        { "name": "Satlasana", "taluka": "Satlasana", "areas": ["Satlasana Town", "Vav", "Sudasana", "Bhalusana"] },
+        { "name": "Jotana", "taluka": "Jotana", "areas": ["Jotana Town", "Suraj", "Katosan", "Santhal"] }
+      ]
+    },
+    {
+      "name": "Morbi",
+      "cities": [
+        { "name": "Morbi", "taluka": "Morbi", "areas": ["Ceramic Plaza", "Trajpar", "Sanala Road", "Lakhdhirpur Road", "Mahendranagar", "Navlakhi Road"] },
+        { "name": "Wankaner", "taluka": "Wankaner", "areas": ["Ranjit Vilas Palace Area", "National Highway", "Mesariya", "Sindhavadar"] },
+        { "name": "Halvad", "taluka": "Halvad", "areas": ["Halvad City", "Dhrangadhra Road", "Tikkar", "Mayurnagar"] },
+        { "name": "Tankara", "taluka": "Tankara", "areas": ["Dayanand Saraswati Smarak", "Lajai GIDC", "Mota Khijadiya", "Neknam"] },
+        { "name": "Maliya Miyana", "taluka": "Maliya Miyana", "areas": ["Navlakhi Port", "Maliya Town", "Varsamedi", "Bodki"] }
+      ]
+    },
+    {
+      "name": "Narmada",
+      "cities": [
+        { "name": "Rajpipla", "taluka": "Nandod", "areas": ["Rajpipla City", "Vadia Palace", "Poicha Nilkanthdham", "Dharampuri"] },
+        { "name": "Kevadia / Ekta Nagar", "taluka": "Garudeshwar", "areas": ["Statue of Unity Area", "Sardar Sarovar Dam", "Tent City", "Gora Colony"] },
+        { "name": "Dediapada", "taluka": "Dediapada", "areas": ["Dediapada Town", "Shoolpaneshwar Sanctuary", "Sagbara Road", "Bebbar"] },
+        { "name": "Tilakwada", "taluka": "Tilakwada", "areas": ["Tilakwada Town", "Narmada Ghat", "Devliya", "Vengani"] },
+        { "name": "Sagbara", "taluka": "Sagbara", "areas": ["Sagbara Town", "Patvali", "Selamba", "Dhavliver"] }
+      ]
+    },
+    {
+      "name": "Navsari",
+      "cities": [
+        { "name": "Navsari", "taluka": "Navsari", "areas": ["Lunsikui", "Jalalpor Road", "Vijalpore", "Eru Char Rasta", "Grid Road", "Chhapra Road"] },
+        { "name": "Bilimora", "taluka": "Gandevi", "areas": ["Station Area", "Desra", "Devsar", "Somnath Road", "Antalia"] },
+        { "name": "Gandevi", "taluka": "Gandevi", "areas": ["Gandevi Town", "Amalsad", "Dhamdachha", "Khaparwada"] },
+        { "name": "Chikhli", "taluka": "Chikhli", "areas": ["Chikhli Highway", "Alipoor", "Kharoli", "Vankal", "Samroli"] },
+        { "name": "Jalalpore", "taluka": "Jalalpore", "areas": ["Dandi Beach (Salt March)", "Ubhrat Beach", "Mahuvar", "Maroli"] },
+        { "name": "Khergam", "taluka": "Khergam", "areas": ["Khergam Town", "Nandhai", "Panikhadak", "Bhairav"] }
+      ]
+    },
+    {
+      "name": "Panchmahal",
+      "cities": [
+        { "name": "Godhra", "taluka": "Godhra", "areas": ["Vavdi", "Bhuravav", "Bamroli Road", "Chhavdi", "Station Road"] },
+        { "name": "Halol", "taluka": "Halol", "areas": ["Halol GIDC", "Pavagadh Foothills", "Champaner (UNESCO Heritage)", "Baska", "Tajpura"] },
+        { "name": "Kalol", "taluka": "Kalol", "areas": ["Kalol Town", "Derol Station", "Vejalpur", "Kanod"] },
+        { "name": "Shehra", "taluka": "Shehra", "areas": ["Shehra Town", "Morva", "Demli", "Bhurakhal"] },
+        { "name": "Ghoghamba", "taluka": "Ghoghamba", "areas": ["Ghoghamba Town", "Rajgadh", "Kantibhed", "Vav"] },
+        { "name": "Jambughoda", "taluka": "Jambughoda", "areas": ["Jambughoda Wildlife Sanctuary Area", "Narukot", "Kevdi"] },
+        { "name": "Morva Hadaf", "taluka": "Morva Hadaf", "areas": ["Morva Town", "Rampura", "Metral", "Rasulpur"] }
+      ]
+    },
+    {
+      "name": "Patan",
+      "cities": [
+        { "name": "Patan", "taluka": "Patan", "areas": ["Rani ki Vav Area", "Patan Patola Market", "Siddhpur Crossroads", "Hansapur", "Subhash Chowk"] },
+        { "name": "Siddhpur", "taluka": "Siddhpur", "areas": ["Bindu Sarovar", "Bohra Vad", "Metrana", "Kakoshi", "Dethali"] },
+        { "name": "Chanasma", "taluka": "Chanasma", "areas": ["Chanasma Town", "Lanva", "Jhulasan", "Dhamoj"] },
+        { "name": "Harij", "taluka": "Harij", "areas": ["Harij Market", "Sankheshwar Road", "Katosan", "Roda"] },
+        { "name": "Radhanpur", "taluka": "Radhanpur", "areas": ["Radhanpur Highway", "Sardar Patel Chowk", "Gadh", "Kamalpur"] },
+        { "name": "Sami", "taluka": "Sami", "areas": ["Sami Town", "Loliya", "Varana", "Dudkha"] },
+        { "name": "Sankheshwar", "taluka": "Sankheshwar", "areas": ["Jain Tirth Area", "Dharampur", "Panchasar"] },
+        { "name": "Saraswati", "taluka": "Saraswati", "areas": ["Vaghdod", "Balisana", "Manund", "Sampra"] },
+        { "name": "Santallpur", "taluka": "Santalpur", "areas": ["Santalpur Town", "Varahi", "Charanka Solar Park", "Bakutra"] }
+      ]
+    },
+    {
+      "name": "Porbandar",
+      "cities": [
+        { "name": "Porbandar", "taluka": "Porbandar", "areas": ["Kirti Mandir (Gandhiji Birthplace)", "Chowpatty Beach", "Birla Sagar", "Bokhira", "Subhashnagar", "Rokadia Hanuman Area"] },
+        { "name": "Ranavav", "taluka": "Ranavav", "areas": ["Ranavav Cement Plant", "Jambuvant Cave Area", "Adityana", "Bhadula"] },
+        { "name": "Kutiyana", "taluka": "Kutiyana", "areas": ["Kutiyana Town", "Mahiyari", "Helabodi", "Devda"] }
+      ]
+    },
+    {
+      "name": "Rajkot",
+      "cities": [
+        { "name": "Rajkot", "taluka": "Rajkot", "areas": ["Kalawad Road", "Yagnik Road", "150 Feet Ring Road", "Madhapar Chowkadi", "University Road", "Mavdi", "Kothariya", "Aji GIDC", "Metoda GIDC", "Shapar-Veraval"] },
+        { "name": "Gondal", "taluka": "Gondal", "areas": ["Naulakha Palace Area", "Gondal Marketing Yard", "Gomta", "Bhojpara", "Bhadwa"] },
+        { "name": "Jetpur", "taluka": "Jetpur", "areas": ["Textile Dyeing Cluster", "Navagadh", "Dhoraji Road", "Pedhla", "Pithadiya"] },
+        { "name": "Dhoraji", "taluka": "Dhoraji", "areas": ["Dhoraji City", "Jamkandorna Road", "Toraniya", "Patanvav"] },
+        { "name": "Upleta", "taluka": "Upleta", "areas": ["Upleta Town", "Bhayavadar", "Dumiyani", "Paneli Moti"] },
+        { "name": "Jasdan", "taluka": "Jasdan", "areas": ["Jasdan City", "Ghela Somnath", "Atkot", "Kamlapur"] },
+        { "name": "Kotda Sangani", "taluka": "Kotda Sangani", "areas": ["Kotda Town", "Anida", "Rajpara", "Sardhar"] },
+        { "name": "Lodhika", "taluka": "Lodhika", "areas": ["Metoda Industrial Area", "Lodhika Town", "Vajdi", "Undvi"] },
+        { "name": "Paddhari", "taluka": "Paddhari", "areas": ["Paddhari Town", "Ukharla", "Targhari", "Salpipaliya"] },
+        { "name": "Vinchhiya", "taluka": "Vinchhiya", "areas": ["Vinchhiya Town", "Amrapur", "Pipardi", "Sompipaliya"] }
+      ]
+    },
+    {
+      "name": "Sabarkantha",
+      "cities": [
+        { "name": "Himatnagar", "taluka": "Himatnagar", "areas": ["Motipura", "Mahavirnagar", "Idar Highway", "Hapa", "Berla", "Piramal Glass Area"] },
+        { "name": "Idar", "taluka": "Idar", "areas": ["Idargadh Foothills", "Jawanpura", "Khedbrahma Road", "Laloda"] },
+        { "name": "Khedbrahma", "taluka": "Khedbrahma", "areas": ["Ambaji Road", "Brahma Temple Area", "Aghiya", "Matoda"] },
+        { "name": "Talod", "taluka": "Talod", "areas": ["Talod Market", "Harsol", "Modasa Road", "Aniyad"] },
+        { "name": "Prantij", "taluka": "Prantij", "areas": ["Prantij Town", "Salal", "Tajpur", "Pogalu"] },
+        { "name": "Vadali", "taluka": "Vadali", "areas": ["Vadali City", "Dharoi Road", "Dobhada", "Medh"] },
+        { "name": "Poshina", "taluka": "Poshina", "areas": ["Poshina Heritage Area", "Gunbhakhari", "Delvada", "Kotda"] },
+        { "name": "Vijaynagar", "taluka": "Vijaynagar", "areas": ["Polo Forest Area", "Vijaynagar Town", "Antarsuba", "Chithoda"] }
+      ]
+    },
+    {
+      "name": "Surat",
+      "cities": [
+        { "name": "Surat City", "taluka": "Surat City", "areas": ["Adajan", "Vesu", "Pal", "Athwa Lines", "Piplod", "Katargam", "Varachha", "Dindoli", "Udhna", "Pandesara", "Rander", "Ghanshyam Nagar", "Althan", "Sachin GIDC", "Hazira Industrial Belt"] },
+        { "name": "Bardoli", "taluka": "Bardoli", "areas": ["Swaraj Ashram Area", "Station Road", "Baben", "Ten", "Kadod"] },
+        { "name": "Kamrej", "taluka": "Kamrej", "areas": ["Kamrej Char Rasta", "Navagam", "Kholvad", "Vihan", "Pasodara"] },
+        { "name": "Olpad", "taluka": "Olpad", "areas": ["Olpad Town", "Sayan", "Kim", "Karanj", "Masma"] },
+        { "name": "Mandvi (Surat)", "taluka": "Mandvi", "areas": ["Mandvi Town", "Tadkeshwar", "Areth", "Godavadi"] },
+        { "name": "Mahuva (Surat)", "taluka": "Mahuva", "areas": ["Mahuva Town", "Anawal", "Kachhal", "Vasan"] },
+        { "name": "Mangrol (Surat)", "taluka": "Mangrol", "areas": ["Kosamba", "Mota Borsara", "Vankal", "Zankhvav"] },
+        { "name": "Palsana", "taluka": "Palsana", "areas": ["Palsana Crossroad", "Chalthan Sugar Factory", "Baleshwar", "Gangadhara"] },
+        { "name": "Choriyasi", "taluka": "Choriyasi", "areas": ["Dumas Beach", "Magdalla Port", "Ichhapore", "Bhimrad"] },
+        { "name": "Umarpada", "taluka": "Umarpada", "areas": ["Umarpada Town", "Vadi", "Chavda", "Gowaliya"] }
+      ]
+    },
+    {
+      "name": "Surendranagar",
+      "cities": [
+        { "name": "Surendranagar", "taluka": "Wadhwan", "areas": ["Wadhwan Heritage City", "Joravarnagar", "Ratanpar", "Duda", "80 Feet Road"] },
+        { "name": "Dhrangadhra", "taluka": "Dhrangadhra", "areas": ["Dhrangadhra Chemical Works", "Military Camp Area", "Kuda Salt Works", "Methan"] },
+        { "name": "Limbdi", "taluka": "Limbdi", "areas": ["Limbdi Highway", "Natraj Cinema Road", "Ralol", "Bhoika", "Jansali"] },
+        { "name": "Chotila", "taluka": "Chotila", "areas": ["Chamunda Mata Hill Temple", "Than Road", "Nava", "Reshamiya"] },
+        { "name": "Thangadh", "taluka": "Thangadh", "areas": ["Ceramic Industrial Area", "Tarnetar (Famous Fair)", "Songadh", "Jamwali"] },
+        { "name": "Dasada (Patdi)", "taluka": "Dasada", "areas": ["Little Rann of Kutch Gate", "Patdi Town", "Bajana", "Zinzuwada"] },
+        { "name": "Muli", "taluka": "Muli", "areas": ["Muli Mandir", "Gautameshwar", "Sayla Road", "Sara"] },
+        { "name": "Sayla", "taluka": "Sayla", "areas": ["Sayla Town", "Sudamada", "Dhajala", "Sejakpar"] },
+        { "name": "Chuda", "taluka": "Chuda", "areas": ["Chuda Town", "Karmad", "Bhadreshwar", "Chachana"] },
+        { "name": "Lakhtar", "taluka": "Lakhtar", "areas": ["Lakhtar Town", "Lilapur", "Dhanki", "Vana"] }
+      ]
+    },
+    {
+      "name": "Tapi",
+      "cities": [
+        { "name": "Vyara", "taluka": "Vyara", "areas": ["Station Road", "Maypur", "Panwadi", "Kapura", "Unai Road"] },
+        { "name": "Songadh", "taluka": "Songadh", "areas": ["Songadh Fort", "Ukai Dam", "Doswada", "Gopalpura"] },
+        { "name": "Valod", "taluka": "Valod", "areas": ["Valod Town", "Buhari", "Degama", "Kalamkui"] },
+        { "name": "Nizar", "taluka": "Nizar", "areas": ["Nizar Town", "Pati", "Raygadh", "Shaligram"] },
+        { "name": "Uchchhal", "taluka": "Uchchhal", "areas": ["Uchchhal Town", "Mohini", "Chitpur", "Jharali"] },
+        { "name": "Kukurmunda", "taluka": "Kukurmunda", "areas": ["Kukurmunda Town", "Amoda", "Mata Faliya"] },
+        { "name": "Dolvan", "taluka": "Dolvan", "areas": ["Dolvan Town", "Padamdungari", "Pala", "Gadhvi"] }
+      ]
+    },
+    {
+      "name": "Vadodara",
+      "cities": [
+        { "name": "Vadodara City", "taluka": "Vadodara", "areas": ["Alkapuri", "Akota", "Gotri", "Fatehgunj", "Manjalpur", "Karelibaug", "Vasna Road", "Makarpura GIDC", "Waghodia Road", "Sayajigunj", "Gorwa", "Sama-Savli Road", "Atladara", "Subhanpura"] },
+        { "name": "Padra", "taluka": "Padra", "areas": ["Padra Town", "Luna GIDC", "Ekalbara", "Dabhasa", "Mahuvad"] },
+        { "name": "Karjan", "taluka": "Karjan", "areas": ["Karjan City", "Miyagam", "Kandari", "Sadhli", "Valan"] },
+        { "name": "Dabhoi", "taluka": "Dabhoi", "areas": ["Hira Bhagol (Heritage Gate)", "Dabhoi Fort", "Vega", "Kayavarohan"] },
+        { "name": "Waghodia", "taluka": "Waghodia", "areas": ["Parul University Campus", "Waghodia GIDC", "Jarod", "Goraj"] },
+        { "name": "Savli", "taluka": "Savli", "areas": ["Savli GIDC", "Manjusar GIDC", "Lachhanpura", "Moxi"] },
+        { "name": "Sinor", "taluka": "Sinor", "areas": ["Narmada Ghat Area", "Barkal", "Malsar", "Sadhli"] },
+        { "name": "Desar", "taluka": "Desar", "areas": ["Desar Town", "Vejpur", "Vakhtapur", "Pandu"] }
+      ]
+    },
+    {
+      "name": "Valsad",
+      "cities": [
+        { "name": "Valsad", "taluka": "Valsad", "areas": ["Tithal Beach", "Dharampur Road", "Mograwadi", "Abrama", "Halar", "Atul Colony"] },
+        { "name": "Vapi", "taluka": "Pardi", "areas": ["Vapi GIDC", "Gunjan", "Chala", "Chanod Colony", "Daman Road", "Koparli Road"] },
+        { "name": "Pardi", "taluka": "Pardi", "areas": ["Pardi Town", "Killa Pardi", "Udvada (Sacred Iranshah Atash Behram)", "Dumlav"] },
+        { "name": "Dharampur", "taluka": "Dharampur", "areas": ["Lady Wilson Museum Area", "Barumal Temple", "Bilpudi", "Sidumbar"] },
+        { "name": "Umbergaon", "taluka": "Umbergaon", "areas": ["Umbergaon GIDC", "Sanjan (Parsi Landing Site)", "Maroli", "Bhilad GIDC"] },
+        { "name": "Kaprada", "taluka": "Kaprada", "areas": ["Kaprada Town", "Dixal", "Nana Pondha", "Motapondha"] }
+      ]
+    }
+  ]
+}
+
