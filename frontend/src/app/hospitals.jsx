@@ -190,8 +190,6 @@ export default function NearbyHospitalsScreen() {
     } catch (e) {
       console.warn('Manual city selection notice:', e.message);
     }
-  };
-    } catch (e) {}
 
     // Fallback search by city text
     getHospitals({
