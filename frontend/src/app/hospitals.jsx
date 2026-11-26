@@ -26,58 +26,51 @@ import {
   reverseGeocodeBackend,
 } from '../services/medicalService';
 import gujaratData from '../constants/gujaratLocations.json';
+import { GUJARAT_CITY_OPTIONS } from '../utils/locationService';
 import AroviaHeader from '../components/AroviaHeader';
 import AroviaBottomNav from '../components/AroviaBottomNav';
 import LocationSelectorModal from '../components/LocationSelectorModal';
 import { isValidHospitalPhone, cleanDialerPhone } from '../utils/phoneValidator';
+import { useTranslation } from 'react-i18next';
 
 const FACILITY_CATEGORIES = [
-  'All Hospitals',
-  'Multi-Specialty',
-  'Government',
-  'General',
-  'Emergency',
-  'Cardiology',
-  'Children\'s Hospital',
-  'Eye Hospital',
-  'Dental Hospital',
-  'Orthopedics',
-  'Maternity',
-  'Cancer Care',
-  'Neurology',
-  'Diagnostic Centre',
+  { value: 'All Hospitals', labelKey: 'hospitals.categories.all' },
+  { value: 'Multi-Specialty', labelKey: 'hospitals.categories.multiSpecialty' },
+  { value: 'Government', labelKey: 'hospitals.categories.government' },
+  { value: 'General', labelKey: 'hospitals.categories.general' },
+  { value: 'Emergency', labelKey: 'hospitals.categories.emergency' },
+  { value: 'Cardiology', labelKey: 'hospitals.categories.cardiology' },
+  { value: 'Pediatrics', labelKey: 'hospitals.categories.pediatrics' },
+  { value: 'Eye Hospital', labelKey: 'hospitals.categories.eye' },
+  { value: 'Dental Hospital', labelKey: 'hospitals.categories.dental' },
+  { value: 'Orthopedics', labelKey: 'hospitals.categories.orthopedics' },
+  { value: 'Maternity', labelKey: 'hospitals.categories.maternity' },
+  { value: 'Cancer Care', labelKey: 'hospitals.categories.cancer' },
+  { value: 'Neurology', labelKey: 'hospitals.categories.neurology' },
+  { value: 'Diagnostic Centre', labelKey: 'hospitals.categories.diagnostic' },
 ];
 
 const DISTANCE_FILTERS = [
-  { label: 'Within 2 km', value: 2 },
-  { label: 'Within 5 km', value: 5 },
-  { label: 'Within 10 km', value: 10 },
-  { label: 'Within 25 km', value: 25 },
-  { label: 'Within 50 km', value: 50 },
-  { label: 'Within 100 km', value: 100 },
-  { label: 'All Results', value: 150 },
+  { value: 2 },
+  { value: 5 },
+  { value: 10 },
+  { value: 25 },
+  { value: 50 },
+  { value: 100 },
+  { value: 150, isAll: true },
 ];
 
 const SORT_OPTIONS = [
-  { label: 'Nearest First', value: 'distance' },
-  { label: 'Highest Rated', value: 'rating' },
+  { labelKey: 'hospitals.nearestFirst', value: 'distance' },
+  { labelKey: 'hospitals.highestRated', value: 'rating' },
 ];
-
-// Flatten cities across all Gujarat districts for manual search
-const ALL_GUJARAT_CITIES = gujaratData.districts.flatMap((d) =>
-  d.cities.map((c) => ({
-    name: `${c.name}, ${d.name}`,
-    cityName: c.name,
-    districtName: d.name,
-    taluka: c.taluka,
-  }))
-);
 
 export default function NearbyHospitalsScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const { isAuthenticated, user, loading: authLoading } = useAuth();
   const { colors, isDark } = useAppTheme();
+  const { t } = useTranslation();
 
   // Protect screen from unauthenticated access
   useEffect(() => {
@@ -182,11 +175,12 @@ export default function NearbyHospitalsScreen() {
   };
 
   const handleSelectManualCity = async (selectedOption) => {
-    const cityName = typeof selectedOption === 'string' ? selectedOption : selectedOption.name;
+    const cityName = typeof selectedOption === 'string' ? selectedOption : (selectedOption.cityName || selectedOption.name);
+    const districtName = typeof selectedOption === 'string' ? '' : (selectedOption.districtName || '');
     setShowCityPicker(false);
 
     try {
-      await setManualLocation(cityName);
+      await setManualLocation(cityName, districtName);
     } catch (e) {
       console.warn('Manual city selection notice:', e.message);
     }
@@ -238,7 +232,7 @@ export default function NearbyHospitalsScreen() {
           <View style={styles.locationTextWrap}>
             <View style={styles.statusLabelRow}>
               <Text style={styles.locStatusLabel}>
-                {isGPSLocked ? 'LIVE GPS ACTIVE • GUJARAT' : 'LOCATION • GUJARAT'}
+                {isGPSLocked ? t('hospitals.liveGpsActive') : t('hospitals.locationGujarat')}
               </Text>
               {gpsAccuracy !== null && (
                 <View
@@ -274,8 +268,8 @@ export default function NearbyHospitalsScreen() {
             </View>
             <Text style={[styles.locAddress, { color: colors.text }]} numberOfLines={1}>
               {locLoading
-                ? 'Locking high-accuracy GPS coordinates...'
-                : (locationDetails?.displayName || locationDetails?.city || 'Select Gujarat Location')}
+                ? t('hospitals.lockingGps')
+                : (locationDetails?.displayName || locationDetails?.city || t('hospitals.selectLocation'))}
             </Text>
           </View>
         </View>
@@ -286,7 +280,7 @@ export default function NearbyHospitalsScreen() {
             onPress={() => setShowCityPicker(true)}
             activeOpacity={0.8}
           >
-            <Text style={styles.changeCityText}>Browse</Text>
+            <Text style={styles.changeCityText}>{t('hospitals.browse')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.refreshGpsBtn}
@@ -318,7 +312,7 @@ export default function NearbyHospitalsScreen() {
           <Ionicons name="search" size={16} color="#94A3B8" style={{ marginRight: 6 }} />
           <TextInput
             style={[styles.searchInput, { color: colors.text }]}
-            placeholder="Search hospital name, city, specialty..."
+            placeholder={t('hospitals.searchPlaceholder')}
             placeholderTextColor="#94A3B8"
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -350,7 +344,7 @@ export default function NearbyHospitalsScreen() {
                     { color: sortBy === opt.value ? '#FFFFFF' : colors.textSecondary },
                   ]}
                 >
-                  {opt.label}
+                  {t(opt.labelKey)}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -362,18 +356,19 @@ export default function NearbyHospitalsScreen() {
             activeOpacity={0.8}
           >
             <Ionicons name="map-outline" size={14} color="#FFFFFF" style={{ marginRight: 4 }} />
-            <Text style={styles.mapViewShortcutText}>Map View</Text>
+            <Text style={styles.mapViewShortcutText}>{t('hospitals.mapViewBtn')}</Text>
           </TouchableOpacity>
         </View>
 
         {/* ── 3. DISTANCE RADIUS FILTER PILLS ───────────────────────── */}
         <View style={styles.radiusSection}>
           <Text style={[styles.radiusLabel, { color: colors.textSecondary }]}>
-            Distance Radius:
+            {t('hospitals.distanceRadius')}
           </Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.radiusScroll}>
             {DISTANCE_FILTERS.map((rf) => {
               const isSelected = selectedRadius === rf.value;
+              const pillLabel = rf.isAll ? t('hospitals.allResults') : t('hospitals.withinKm', { km: rf.value });
               return (
                 <TouchableOpacity
                   key={rf.value}
@@ -397,7 +392,7 @@ export default function NearbyHospitalsScreen() {
                       { color: isSelected ? '#FFFFFF' : colors.text },
                     ]}
                   >
-                    {rf.label}
+                    {pillLabel}
                   </Text>
                 </TouchableOpacity>
               );
@@ -412,10 +407,10 @@ export default function NearbyHospitalsScreen() {
           contentContainerStyle={styles.categoryScroll}
         >
           {FACILITY_CATEGORIES.map((cat) => {
-            const isSelected = selectedCategory === cat;
+            const isSelected = selectedCategory === cat.value;
             return (
               <TouchableOpacity
-                key={cat}
+                key={cat.value}
                 style={[
                   styles.catChip,
                   {
@@ -429,7 +424,7 @@ export default function NearbyHospitalsScreen() {
                     borderColor: isSelected ? Palette.primaryBlue : colors.cardBorder,
                   },
                 ]}
-                onPress={() => setSelectedCategory(cat)}
+                onPress={() => setSelectedCategory(cat.value)}
                 activeOpacity={0.75}
               >
                 <Text
@@ -438,7 +433,7 @@ export default function NearbyHospitalsScreen() {
                     { color: isSelected ? Palette.primaryBlue : colors.text },
                   ]}
                 >
-                  {cat}
+                  {t(cat.labelKey)}
                 </Text>
               </TouchableOpacity>
             );
@@ -461,10 +456,10 @@ export default function NearbyHospitalsScreen() {
       >
         <View style={styles.resultsHeaderRow}>
           <Text style={[styles.resultsCountText, { color: colors.text }]}>
-            Found <Text style={{ color: Palette.primaryBlue, fontWeight: '800' }}>{hospitals.length}</Text> Healthcare Facilities
+            {t('hospitals.foundPrefix')} <Text style={{ color: Palette.primaryBlue, fontWeight: '800' }}>{hospitals.length}</Text> {t('hospitals.facilitiesLabel')}
           </Text>
           <Text style={[styles.radiusInfoText, { color: colors.textSecondary }]}>
-            Within {selectedRadius} km of current location
+            {t('hospitals.withinRadiusOf', { km: selectedRadius })}
           </Text>
         </View>
 
@@ -472,7 +467,7 @@ export default function NearbyHospitalsScreen() {
           <View style={styles.loadingBox}>
             <ActivityIndicator size="large" color={Palette.primaryBlue} />
             <Text style={[styles.loadingText, { color: colors.textSecondary }]}>
-              Discovering real nearby hospitals and calculating distances...
+              {t('hospitals.calculating')}
             </Text>
           </View>
         ) : hospitals.length === 0 ? (
@@ -487,17 +482,17 @@ export default function NearbyHospitalsScreen() {
           >
             <Ionicons name="medkit-outline" size={44} color="#94A3B8" />
             <Text style={[styles.emptyTitle, { color: colors.text }]}>
-              No Hospitals Found in this Radius
+              {t('hospitals.noHospitals')}
             </Text>
             <Text style={[styles.emptyDesc, { color: colors.textSecondary }]}>
-              No healthcare facilities were found within {selectedRadius} km of {locationDetails?.displayName || locationDetails?.city || 'your area'}. Try expanding your search radius to 50 km or 100 km.
+              {t('hospitals.noHospitalsSub', { km: selectedRadius, area: locationDetails?.displayName || locationDetails?.city || 'Gujarat' })}
             </Text>
             <TouchableOpacity
               style={styles.expandRadiusBtn}
               onPress={() => setSelectedRadius(50)}
               activeOpacity={0.8}
             >
-              <Text style={styles.expandRadiusBtnText}>Expand Search to 50 km</Text>
+              <Text style={styles.expandRadiusBtnText}>{t('hospitals.expandRadius')}</Text>
             </TouchableOpacity>
           </View>
         ) : (
@@ -533,7 +528,7 @@ export default function NearbyHospitalsScreen() {
                   {item.isVerified ? (
                     <View style={styles.verifiedBadge}>
                       <Ionicons name="checkmark-circle" size={11} color="#FFFFFF" style={{ marginRight: 3 }} />
-                      <Text style={styles.verifiedBadgeText}>Verified</Text>
+                      <Text style={styles.verifiedBadgeText}>{t('hospitals.verified')}</Text>
                     </View>
                   ) : null}
                 </View>
@@ -592,7 +587,7 @@ export default function NearbyHospitalsScreen() {
                 {item.is24x7Emergency && (
                   <View style={styles.emergencyAvailabilityPill}>
                     <Ionicons name="flash" size={12} color="#DC2626" style={{ marginRight: 4 }} />
-                    <Text style={styles.emergencyAvailabilityText}>24x7 Emergency Trauma Unit Available</Text>
+                    <Text style={styles.emergencyAvailabilityText}>{t('hospitals.emergencyTraumaUnit')}</Text>
                   </View>
                 )}
 
@@ -610,12 +605,12 @@ export default function NearbyHospitalsScreen() {
                       activeOpacity={0.8}
                     >
                       <Ionicons name="call" size={13} color="#10B981" style={{ marginRight: 4 }} />
-                      <Text style={[styles.callBtnText, { color: '#10B981' }]}>Call</Text>
+                      <Text style={[styles.callBtnText, { color: '#10B981' }]}>{t('hospitals.call')}</Text>
                     </TouchableOpacity>
                   ) : (
                     <View style={[styles.callBtnDisabled, { borderColor: colors.cardBorder }]}>
                       <Ionicons name="call-outline" size={12} color="#94A3B8" style={{ marginRight: 3 }} />
-                      <Text style={styles.callBtnDisabledText}>Unavailable</Text>
+                      <Text style={styles.callBtnDisabledText}>{t('common.unavailable')}</Text>
                     </View>
                   )}
 
@@ -632,7 +627,7 @@ export default function NearbyHospitalsScreen() {
                     activeOpacity={0.8}
                   >
                     <Ionicons name="navigate" size={13} color={Palette.primaryBlue} style={{ marginRight: 4 }} />
-                    <Text style={[styles.directionsBtnText, { color: Palette.primaryBlue }]}>Directions</Text>
+                    <Text style={[styles.directionsBtnText, { color: Palette.primaryBlue }]}>{t('hospitals.directions')}</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
@@ -640,7 +635,7 @@ export default function NearbyHospitalsScreen() {
                     onPress={() => handleHospitalAction(item._id, 'view')}
                     activeOpacity={0.85}
                   >
-                    <Text style={styles.detailsBtnText}>View Details</Text>
+                    <Text style={styles.detailsBtnText}>{t('hospitals.viewDetails')}</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -653,11 +648,11 @@ export default function NearbyHospitalsScreen() {
       <LocationSelectorModal
         visible={showCityPicker}
         onClose={() => setShowCityPicker(false)}
-        title="Select Gujarat City / Town"
-        data={ALL_GUJARAT_CITIES}
+        title={t('hospitals.selectCityTitle')}
+        data={GUJARAT_CITY_OPTIONS}
         selectedItem={locationDetails?.displayName || locationDetails?.city || ''}
         onSelect={handleSelectManualCity}
-        placeholder="Search cities across Gujarat (Dwarka, Jamnagar, Surat, Rajkot...)"
+        placeholder={t('hospitals.searchCitiesPlaceholder')}
       />
 
       <AroviaBottomNav activeTab="Nearby Hospitals" />

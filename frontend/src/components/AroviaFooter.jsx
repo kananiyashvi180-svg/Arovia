@@ -50,51 +50,58 @@ export default function AroviaFooter() {
           <View style={styles.logoBadge}>
             <Text style={styles.heartIcon}>💙</Text>
           </View>
-          <Text style={styles.brandName}>Arovia</Text>
+          <Text style={styles.brandName}>{t('common.appName')}</Text>
         </View>
         <Text style={styles.brandDesc}>
-          India's most trusted platform for finding nearby hospitals and expert healthcare guidance.
+          {t('footer.description')}
         </Text>
       </View>
 
       {/* Emergency Call Action Card */}
       <View style={styles.emergencyCard}>
         <View>
-          <Text style={styles.emergencyLabel}>Emergency Helpline</Text>
+          <Text style={styles.emergencyLabel}>{t('footer.emergencyHelpline')}</Text>
           <Text style={styles.emergencyNumber}>108</Text>
         </View>
         <TouchableOpacity style={styles.emergencyBtn} onPress={handleCallEmergency}>
-          <Text style={styles.emergencyBtnText}>📞 Call 108</Text>
+          <Text style={styles.emergencyBtnText}>📞 {t('home.call108Now')}</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.gridSection}>
         {/* Quick Links Column */}
         <View style={styles.linkColumn}>
-          <Text style={styles.columnHeader}>Quick Links</Text>
+          <Text style={styles.columnHeader}>{t('footer.quickLinks')}</Text>
           <TouchableOpacity onPress={() => handleProtectedNavigate('/hospitals', 'Please sign in to find hospitals.')}>
-            <Text style={styles.linkItem}>Find Hospitals</Text>
+            <Text style={styles.linkItem}>{t('footer.findHospitals')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => handleProtectedNavigate('/live-map', 'Please sign in to view map area.')}>
-            <Text style={styles.linkItem}>Map View</Text>
+            <Text style={styles.linkItem}>{t('nav.mapView')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => handleProtectedNavigate('/symptoms', 'Please sign in to check symptoms.')}>
-            <Text style={styles.linkItem}>Symptom Checker</Text>
+            <Text style={styles.linkItem}>{t('nav.symptomsChecker')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => handleProtectedNavigate('/favorites', 'Please sign in to view saved hospitals.')}>
-            <Text style={styles.linkItem}>Saved Hospitals</Text>
+            <Text style={styles.linkItem}>{t('nav.savedHospitals')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => handleProtectedNavigate('/profile', 'Please sign in to view profile.')}>
-            <Text style={styles.linkItem}>Profile</Text>
+            <Text style={styles.linkItem}>{t('nav.profile')}</Text>
           </TouchableOpacity>
         </View>
 
         {/* Specializations Column */}
         <View style={styles.linkColumn}>
-          <Text style={styles.columnHeader}>Specializations</Text>
-          {['Cardiology', 'Neurology', 'Orthopedics', 'Pediatrics', 'Cancer Care', 'General Medicine'].map((spec) => (
-            <TouchableOpacity key={spec} onPress={() => handleSpecialtyFilter(spec)}>
-              <Text style={styles.linkItem}>{spec}</Text>
+          <Text style={styles.columnHeader}>{t('home.specializations')}</Text>
+          {[
+            { key: 'cardiology', label: t('hospitals.categories.cardiology'), api: 'Cardiology' },
+            { key: 'neurology', label: t('hospitals.categories.neurology'), api: 'Neurology' },
+            { key: 'orthopedics', label: t('hospitals.categories.orthopedics'), api: 'Orthopedics' },
+            { key: 'pediatrics', label: t('hospitals.categories.pediatrics'), api: 'Pediatrics' },
+            { key: 'cancer', label: t('hospitals.categories.cancer'), api: 'Cancer Care' },
+            { key: 'general', label: t('hospitals.categories.general'), api: 'General Medicine' },
+          ].map((spec) => (
+            <TouchableOpacity key={spec.key} onPress={() => handleSpecialtyFilter(spec.api)}>
+              <Text style={styles.linkItem}>{spec.label}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -102,7 +109,7 @@ export default function AroviaFooter() {
 
       {/* Contact Information (Gujarat verified HQ) */}
       <View style={styles.contactSection}>
-        <Text style={styles.columnHeader}>Contact Us</Text>
+        <Text style={styles.columnHeader}>{t('footer.contactUs')}</Text>
         <Text style={styles.contactItem}>📍 Ahmedabad, Gujarat, India 380001</Text>
         <Text style={styles.contactItem}>📞 +91 98765 43210</Text>
         <Text style={styles.contactItem}>✉️ support@arovia.in</Text>
@@ -112,18 +119,18 @@ export default function AroviaFooter() {
 
       {/* Legal & Copyright */}
       <View style={styles.legalSection}>
-        <Text style={styles.copyrightText}>© 2026 Arovia. All rights reserved.</Text>
+        <Text style={styles.copyrightText}>{t('footer.rightsReserved')}</Text>
         <View style={styles.legalLinksRow}>
           <TouchableOpacity>
-            <Text style={styles.legalLink}>Privacy Policy</Text>
+            <Text style={styles.legalLink}>{t('nav.privacyPolicy')}</Text>
           </TouchableOpacity>
           <Text style={styles.bullet}>•</Text>
           <TouchableOpacity>
-            <Text style={styles.legalLink}>Terms of Service</Text>
+            <Text style={styles.legalLink}>{t('footer.termsOfService')}</Text>
           </TouchableOpacity>
           <Text style={styles.bullet}>•</Text>
           <TouchableOpacity>
-            <Text style={styles.legalLink}>Cookie Policy</Text>
+            <Text style={styles.legalLink}>{t('footer.cookiePolicy')}</Text>
           </TouchableOpacity>
         </View>
       </View>

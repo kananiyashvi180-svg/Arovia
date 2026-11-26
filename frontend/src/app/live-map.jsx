@@ -28,8 +28,9 @@ import {
 import AroviaHeader from '../components/AroviaHeader';
 import AroviaBottomNav from '../components/AroviaBottomNav';
 import LocationSelectorModal from '../components/LocationSelectorModal';
-import gujaratData from '../constants/gujaratLocations.json';
+import { GUJARAT_CITY_OPTIONS } from '../utils/locationService';
 import { isValidHospitalPhone, cleanDialerPhone } from '../utils/phoneValidator';
+import { useTranslation } from 'react-i18next';
 
 const RADIUS_OPTIONS = [
   { label: '2 km', value: 2 },
@@ -43,6 +44,7 @@ export default function LiveMapScreen() {
   const router = useRouter();
   const { user, isAuthenticated, loading: authLoading } = useAuth();
   const { colors, isDark } = useAppTheme();
+  const { t } = useTranslation();
   const webViewRef = useRef(null);
 
   // Unified Location from LocationContext (Single Source of Truth)
@@ -65,25 +67,33 @@ export default function LiveMapScreen() {
   const [selectedHospital, setSelectedHospital] = useState(null);
   const [searchFilter, setSearchFilter] = useState('');
   const [showLocationModal, setShowLocationModal] = useState(false);
-  const [locationSource, setLocationSource] = useState('gps'); // 'gps' | 'manual'
+  const [locationSource, setLocationSource] = useState(isGPSLocked ? 'gps' : 'manual'); // 'gps' | 'profile' | 'manual' | 'none'
   const [errorMessage, setErrorMessage] = useState(null);
+  const [mapError, setMapError] = useState(false);
+  const [showListFallback, setShowListFallback] = useState(false);
 
   // Sync with global location when coords update
   useEffect(() => {
     if (globalCoords?.latitude && globalCoords?.longitude) {
       setUserLocation(globalCoords);
       setCityName(locationDetails?.city || 'Gujarat');
-      fetchHospitalsForCoords(globalCoords.latitude, globalCoords.longitude, selectedRadius);
+      setLocationSource(isGPSLocked ? 'gps' : 'manual');
+      setErrorMessage(null);
+      setLoading(true);
+      fetchHospitalsForCoords(globalCoords.latitude, globalCoords.longitude, selectedRadius).finally(() =>
+        setLoading(false)
+      );
     } else {
       initLocation(selectedRadius);
     }
-  }, [globalCoords?.latitude, globalCoords?.longitude, locationDetails?.city]);
+  }, [globalCoords?.latitude, globalCoords?.longitude, locationDetails?.city, isGPSLocked]);
 
   const initLocation = async (radius = selectedRadius) => {
     setLoading(true);
     setErrorMessage(null);
     try {
-      const res = await refreshLocation(false);
+      // Request foreground location permission & fetch live GPS
+      const res = await refreshLocation(true);
       if (res?.coords) {
         setUserLocation(res.coords);
         setCityName(res.details?.city || 'Gujarat');
@@ -92,7 +102,7 @@ export default function LiveMapScreen() {
         return;
       }
 
-      // If user profile has saved coordinates, use them
+      // Fallback 1: User profile saved coordinates (never invented)
       if (user?.location?.latitude && user?.location?.longitude) {
         const uLat = user.location.latitude;
         const uLng = user.location.longitude;
@@ -103,14 +113,21 @@ export default function LiveMapScreen() {
         return;
       }
 
-      // If no GPS yet, prompt manual city selection or fallback to state center
-      setErrorMessage('GPS coordinates pending. Tap Recenter GPS or Change City.');
-      setUserLocation({ latitude: 22.2587, longitude: 71.1924 });
-      setCityName('Gujarat');
-      await fetchHospitalsForCoords(22.2587, 71.1924, radius);
+      // Fallback 2: Permission denied or GPS off — show explicit message & retain general hospitals list
+      setLocationSource('none');
+      setErrorMessage(t('map.gpsPendingMsg'));
+      const { getHospitals } = require('../services/medicalService');
+      const fallbackRes = await getHospitals({ limit: 30 }).catch(() => null);
+      if (fallbackRes?.data && Array.isArray(fallbackRes.data)) {
+        setHospitals(fallbackRes.data);
+        setSelectedHospital(fallbackRes.data[0] || null);
+      }
+      setShowListFallback(true);
     } catch (err) {
       console.warn('Init location error:', err);
-      setErrorMessage('Could not obtain accurate GPS. You can tap Change City or Recenter.');
+      setLocationSource('none');
+      setErrorMessage(t('map.gpsUnavailableMsg'));
+      setShowListFallback(true);
     } finally {
       setLoading(false);
       setGpsDetecting(false);
@@ -146,6 +163,7 @@ export default function LiveMapScreen() {
 
   const handleRecenter = async () => {
     setGpsDetecting(true);
+    setErrorMessage(null);
     try {
       const res = await refreshLocation(true);
       if (res?.coords) {
@@ -153,6 +171,7 @@ export default function LiveMapScreen() {
         setUserLocation(res.coords);
         setCityName(res.details?.city || 'Gujarat');
         setLocationSource('gps');
+        setShowListFallback(false);
 
         await fetchHospitalsForCoords(latitude, longitude, selectedRadius);
 
@@ -160,10 +179,12 @@ export default function LiveMapScreen() {
         const jsCode = `if (window.map) { window.map.setView([${latitude}, ${longitude}], 14); } true;`;
         webViewRef.current?.injectJavaScript(jsCode);
       } else {
-        Alert.alert('GPS Notice', 'Could not obtain satellite GPS fix. Please verify device GPS is on.');
+        setErrorMessage(t('map.gpsFixFail'));
+        Alert.alert(t('map.gpsNoticeTitle'), t('map.gpsFixFail'));
       }
     } catch (err) {
-      Alert.alert('GPS Error', 'Could not fetch current live GPS location. Please try again.');
+      setErrorMessage(t('map.gpsErrorMsg'));
+      Alert.alert(t('map.gpsErrorTitle'), t('map.gpsErrorMsg'));
     } finally {
       setGpsDetecting(false);
     }
@@ -171,26 +192,48 @@ export default function LiveMapScreen() {
 
   const handleRadiusChange = (radius) => {
     setSelectedRadius(radius);
-    if (userLocation) {
+    if (userLocation?.latitude && userLocation?.longitude) {
       fetchHospitalsForCoords(userLocation.latitude, userLocation.longitude, radius);
     }
   };
 
-  const handleSelectManualCity = (selected) => {
+  const handleSelectManualCity = async (selected) => {
     setShowLocationModal(false);
     if (!selected) return;
 
-    const cityObj = selected.city;
-    if (cityObj?.latitude && cityObj?.longitude) {
-      const newCoords = { latitude: cityObj.latitude, longitude: cityObj.longitude };
-      setUserLocation(newCoords);
-      setCityName(cityObj.name);
-      setLocationSource('manual');
-      setGpsAccuracy(null);
-      fetchHospitalsForCoords(newCoords.latitude, newCoords.longitude, selectedRadius);
+    const pickedCity =
+      typeof selected === 'string'
+        ? selected
+        : selected.cityName || selected.city?.name || selected.name || 'Gujarat';
+    const pickedDistrict =
+      typeof selected === 'string' ? '' : selected.districtName || '';
 
-      const jsCode = `if (window.map) { window.map.setView([${newCoords.latitude}, ${newCoords.longitude}], 13); } true;`;
-      webViewRef.current?.injectJavaScript(jsCode);
+    setLoading(true);
+    setErrorMessage(null);
+    try {
+      const result = await setManualLocation(pickedCity, pickedDistrict);
+      const newCoords = result?.coords;
+      const cleanCity = result?.details?.city || pickedCity;
+      setCityName(cleanCity);
+      setLocationSource('manual');
+
+      if (newCoords?.latitude && newCoords?.longitude) {
+        setUserLocation(newCoords);
+        await fetchHospitalsForCoords(newCoords.latitude, newCoords.longitude, selectedRadius);
+        const jsCode = `if (window.map) { window.map.setView([${newCoords.latitude}, ${newCoords.longitude}], 13); } true;`;
+        webViewRef.current?.injectJavaScript(jsCode);
+      } else {
+        const { getHospitals } = require('../services/medicalService');
+        const cityRes = await getHospitals({ city: cleanCity, limit: 40 });
+        if (cityRes?.data) {
+          setHospitals(cityRes.data);
+          setSelectedHospital(cityRes.data[0] || null);
+        }
+      }
+    } catch (e) {
+      console.warn('Manual city selection notice:', e.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -204,7 +247,7 @@ export default function LiveMapScreen() {
     return nameMatch || cityMatch || areaMatch || specMatch;
   });
 
-  // Handle marker tap message from Leaflet inside WebView
+  // Handle marker tap or map error message from Leaflet inside WebView
   const handleWebViewMessage = (event) => {
     try {
       const msg = JSON.parse(event.nativeEvent.data);
@@ -213,6 +256,8 @@ export default function LiveMapScreen() {
         if (found) {
           setSelectedHospital(found);
         }
+      } else if (msg.type === 'MAP_ERROR') {
+        setMapError(true);
       }
     } catch (err) {
       console.warn('WebView msg error:', err);
@@ -221,24 +266,30 @@ export default function LiveMapScreen() {
 
   // Generate Leaflet Map HTML
   const generateLeafletHtml = useCallback(() => {
-    const lat = userLocation?.latitude || 22.2442;
-    const lng = userLocation?.longitude || 68.9685;
-    const userCity = cityName || 'Your Location';
+    const firstValidHosp = filteredHospitals.find(
+      (h) => (h.location?.latitude || h.geo?.coordinates?.[1]) && (h.location?.longitude || h.geo?.coordinates?.[0])
+    );
+    const lat = userLocation?.latitude || firstValidHosp?.location?.latitude || firstValidHosp?.geo?.coordinates?.[1] || 22.2587;
+    const lng = userLocation?.longitude || firstValidHosp?.location?.longitude || firstValidHosp?.geo?.coordinates?.[0] || 71.1924;
+    const hasUserPin = Boolean(userLocation?.latitude && userLocation?.longitude);
+    const userCity = cityName || t('map.yourLocation');
+    const youAreHereLabel = t('map.yourLocation');
+    const awayLabel = t('map.away');
 
     const safeHospitals = filteredHospitals.map((h) => {
       const hLat = h.location?.latitude || (h.geo?.coordinates ? h.geo.coordinates[1] : null);
       const hLng = h.location?.longitude || (h.geo?.coordinates ? h.geo.coordinates[0] : null);
       return {
         id: String(h._id || ''),
-        name: (h.name || 'Hospital').replace(/'/g, "\\'"),
+        name: h.name || 'Hospital',
         lat: hLat,
         lng: hLng,
         dist: h.distanceFormatted || '',
-        type: (h.type || 'Hospital').replace(/'/g, "\\'"),
+        type: h.type || 'Hospital',
       };
     }).filter((h) => h.lat && h.lng);
 
-    const hospitalsJson = JSON.stringify(safeHospitals);
+    const hospitalsJson = JSON.stringify(safeHospitals).replace(/</g, '\\u003c');
     const selectedId = selectedHospital ? String(selectedHospital._id) : '';
 
     return `
@@ -262,7 +313,6 @@ export default function LiveMapScreen() {
             height: 100%;
             width: 100%;
           }
-          /* Custom user live marker */
           .user-pin-wrap {
             position: relative;
             width: 32px;
@@ -292,8 +342,6 @@ export default function LiveMapScreen() {
             0% { transform: scale(0.6); opacity: 1; }
             100% { transform: scale(1.8); opacity: 0; }
           }
-
-          /* Custom hospital marker pin */
           .hosp-pin {
             width: 34px;
             height: 34px;
@@ -351,65 +399,72 @@ export default function LiveMapScreen() {
       <body>
         <div id="map"></div>
         <script>
-          var map = L.map('map', {
-            zoomControl: false,
-            attributionControl: false
-          }).setView([${lat}, ${lng}], 13);
-
-          L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19
-          }).addTo(map);
-
-          // Add user live position marker
-          var userIcon = L.divIcon({
-            className: 'user-marker-container',
-            html: '<div class="user-pin-wrap"><div class="user-pulse-ring"></div><div class="user-core-dot"></div></div>',
-            iconSize: [32, 32],
-            iconAnchor: [16, 16]
-          });
-
-          var userMarker = L.marker([${lat}, ${lng}], { icon: userIcon, zIndexOffset: 1000 }).addTo(map);
-          userMarker.bindPopup('<div class="pop-title">📍 You Are Here</div><div class="pop-sub">${userCity}</div>');
-
-          // Hospital markers
-          var hospitals = ${hospitalsJson};
-          var selectedId = "${selectedId}";
-          var markerMap = {};
-
-          hospitals.forEach(function(h) {
-            var isSel = (h.id === selectedId);
-            var pinClass = isSel ? 'hosp-pin selected' : 'hosp-pin';
-            var icon = L.divIcon({
-              className: 'hosp-marker-container',
-              html: '<div class="' + pinClass + '" id="pin-' + h.id + '">🏥</div>',
-              iconSize: [34, 34],
-              iconAnchor: [17, 17]
-            });
-
-            var m = L.marker([h.lat, h.lng], { icon: icon }).addTo(map);
-            markerMap[h.id] = m;
-
-            var popupContent = '<div class="pop-title">' + h.name + '</div>' +
-              '<div class="pop-sub">' + h.type + '</div>' +
-              (h.dist ? '<span class="pop-dist">📍 ' + h.dist + ' away</span>' : '');
-            m.bindPopup(popupContent);
-
-            m.on('click', function() {
+          (function() {
+            if (typeof L === 'undefined') {
               if (window.ReactNativeWebView) {
-                window.ReactNativeWebView.postMessage(JSON.stringify({
-                  type: 'SELECT_HOSPITAL',
-                  id: h.id
-                }));
+                window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'MAP_ERROR', message: 'Leaflet unavailable' }));
               }
-            });
-          });
+              return;
+            }
+            var map = L.map('map', {
+              zoomControl: false,
+              attributionControl: true
+            }).setView([${lat}, ${lng}], ${hasUserPin ? 13 : 8});
 
-          window.map = map;
+            var tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              maxZoom: 19,
+              attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            });
+            tileLayer.addTo(map);
+
+            if (${hasUserPin}) {
+              var userIcon = L.divIcon({
+                className: 'user-marker-container',
+                html: '<div class="user-pin-wrap"><div class="user-pulse-ring"></div><div class="user-core-dot"></div></div>',
+                iconSize: [32, 32],
+                iconAnchor: [16, 16]
+              });
+              var userMarker = L.marker([${lat}, ${lng}], { icon: userIcon, zIndexOffset: 1000 }).addTo(map);
+              userMarker.bindPopup('<div class="pop-title">📍 ' + ${JSON.stringify(youAreHereLabel)} + '</div><div class="pop-sub">' + ${JSON.stringify(userCity)} + '</div>');
+            }
+
+            var hospitals = ${hospitalsJson};
+            var selectedId = ${JSON.stringify(selectedId)};
+            var awayLabel = ${JSON.stringify(awayLabel)};
+
+            hospitals.forEach(function(h) {
+              var isSel = (h.id === selectedId);
+              var pinClass = isSel ? 'hosp-pin selected' : 'hosp-pin';
+              var icon = L.divIcon({
+                className: 'hosp-marker-container',
+                html: '<div class="' + pinClass + '" id="pin-' + h.id + '">🏥</div>',
+                iconSize: [34, 34],
+                iconAnchor: [17, 17]
+              });
+
+              var m = L.marker([h.lat, h.lng], { icon: icon }).addTo(map);
+              var popupContent = '<div class="pop-title">' + h.name + '</div>' +
+                '<div class="pop-sub">' + h.type + '</div>' +
+                (h.dist ? '<span class="pop-dist">📍 ' + h.dist + ' ' + awayLabel + '</span>' : '');
+              m.bindPopup(popupContent);
+
+              m.on('click', function() {
+                if (window.ReactNativeWebView) {
+                  window.ReactNativeWebView.postMessage(JSON.stringify({
+                    type: 'SELECT_HOSPITAL',
+                    id: h.id
+                  }));
+                }
+              });
+            });
+
+            window.map = map;
+          })();
         </script>
       </body>
       </html>
     `;
-  }, [userLocation, cityName, filteredHospitals, selectedHospital, isDark]);
+  }, [userLocation, cityName, filteredHospitals, selectedHospital, isDark, t]);
 
   return (
     <SafeAreaView style={[styles.screen, { backgroundColor: colors.background }]}>
@@ -434,14 +489,14 @@ export default function LiveMapScreen() {
               size={18}
               color={locationSource === 'gps' ? '#10B981' : Palette.primaryBlue}
             />
-            <View style={{ marginLeft: 6 }}>
+            <View style={{ marginLeft: 6, flex: 1 }}>
               <Text style={[styles.locCityText, { color: colors.text }]} numberOfLines={1}>
                 {cityName}, Gujarat
               </Text>
               <Text style={styles.locStatusSub}>
                 {locationSource === 'gps'
-                  ? `Live GPS${gpsAccuracy ? ` (±${gpsAccuracy}m)` : ''}`
-                  : 'Selected City Area'}
+                  ? `${t('map.liveGps')}${gpsAccuracy ? ` (±${gpsAccuracy}m)` : ''}`
+                  : t('map.selectedCityArea')}
               </Text>
             </View>
           </View>
@@ -449,11 +504,21 @@ export default function LiveMapScreen() {
           <View style={styles.locActionsRight}>
             <TouchableOpacity
               style={[styles.cityChangeBtn, { borderColor: colors.cardBorder }]}
+              onPress={() => setShowListFallback((prev) => !prev)}
+              activeOpacity={0.8}
+            >
+              <Text style={[styles.cityChangeBtnText, { color: colors.text }]}>
+                {showListFallback || mapError ? t('map.listToggleMap') : t('map.listToggleList')}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.cityChangeBtn, { borderColor: colors.cardBorder }]}
               onPress={() => setShowLocationModal(true)}
               activeOpacity={0.8}
             >
               <Text style={[styles.cityChangeBtnText, { color: Palette.primaryBlue }]}>
-                Change City
+                {t('home.changeCity')}
               </Text>
             </TouchableOpacity>
 
@@ -472,12 +537,37 @@ export default function LiveMapScreen() {
           </View>
         </View>
 
+        {/* Graceful GPS / Location Error Notice Banner */}
+        {errorMessage ? (
+          <View
+            style={{
+              backgroundColor: isDark ? '#451A03' : '#FEF3C7',
+              borderColor: '#F59E0B',
+              borderWidth: 1,
+              borderRadius: 8,
+              padding: 8,
+              marginBottom: 8,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: 8,
+            }}
+          >
+            <Text style={{ flex: 1, fontSize: 11, fontWeight: '600', color: isDark ? '#FDE68A' : '#92400E' }}>
+              ⚠️ {errorMessage}
+            </Text>
+            <TouchableOpacity onPress={handleRecenter} style={{ backgroundColor: Palette.primaryBlue, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 }}>
+              <Text style={{ color: '#FFF', fontSize: 11, fontWeight: '700' }}>{t('map.retryGps')}</Text>
+            </TouchableOpacity>
+          </View>
+        ) : null}
+
         {/* Search Bar */}
-        <View style={styles.searchBarWrap}>
+        <View style={[styles.searchBarWrap, { backgroundColor: isDark ? '#0F172A' : '#F1F5F9' }]}>
           <Ionicons name="search" size={16} color="#94A3B8" style={{ marginRight: 8 }} />
           <TextInput
             style={[styles.mapSearchInput, { color: colors.text }]}
-            placeholder="Search hospitals on map..."
+            placeholder={t('map.searchPlaceholder')}
             placeholderTextColor="#94A3B8"
             value={searchFilter}
             onChangeText={setSearchFilter}
@@ -495,7 +585,7 @@ export default function LiveMapScreen() {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.radiusPillsRow}
         >
-          <Text style={[styles.radiusLabel, { color: colors.textSecondary }]}>Radius:</Text>
+          <Text style={[styles.radiusLabel, { color: colors.textSecondary }]}>{t('map.radiusLabel')}</Text>
           {RADIUS_OPTIONS.map((opt) => {
             const active = selectedRadius === opt.value;
             return (
@@ -528,22 +618,91 @@ export default function LiveMapScreen() {
         </ScrollView>
       </View>
 
-      {/* Map Interactive Canvas */}
+      {/* Map Interactive Canvas OR Fallback List */}
       <View style={styles.mapCanvasContainer}>
         {loading ? (
           <View style={styles.loadingBox}>
             <ActivityIndicator size="large" color={Palette.primaryBlue} />
             <Text style={[styles.loadingText, { color: colors.textSecondary }]}>
-              Finding verified hospitals near {cityName}...
+              {t('map.findingNear', { city: cityName })}
             </Text>
+          </View>
+        ) : showListFallback || mapError ? (
+          <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 14, paddingBottom: 24, gap: 10 }}>
+            {mapError && (
+              <View style={{ backgroundColor: isDark ? '#1E293B' : '#EFF6FF', borderColor: Palette.primaryBlue, borderWidth: 1, borderRadius: 12, padding: 12, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ color: colors.text, fontWeight: '700', fontSize: 13 }}>{t('map.mapUnavailableTitle')}</Text>
+                  <Text style={{ color: colors.textSecondary, fontSize: 11, marginTop: 2 }}>{t('map.mapUnavailableSub')}</Text>
+                </View>
+                <TouchableOpacity
+                  onPress={() => { setMapError(false); setShowListFallback(false); }}
+                  style={{ backgroundColor: Palette.primaryBlue, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8 }}
+                >
+                  <Text style={{ color: '#FFF', fontSize: 11, fontWeight: '700' }}>{t('map.retryMap')}</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+
+            <Text style={{ color: colors.text, fontWeight: '800', fontSize: 14 }}>
+              {t('map.nearbyListTitle')} ({filteredHospitals.length})
+            </Text>
+
+            {filteredHospitals.length === 0 ? (
+              <Text style={{ color: colors.textSecondary, fontSize: 13, textAlign: 'center', marginTop: 20 }}>
+                {t('map.noHospitalsInArea')}
+              </Text>
+            ) : (
+              filteredHospitals.map((h) => {
+                const isSel = selectedHospital?._id === h._id;
+                return (
+                  <TouchableOpacity
+                    key={h._id}
+                    onPress={() => setSelectedHospital(h)}
+                    style={{
+                      backgroundColor: isDark ? '#1E293B' : '#FFFFFF',
+                      borderColor: isSel ? Palette.primaryBlue : colors.cardBorder,
+                      borderWidth: isSel ? 1.5 : 1,
+                      borderRadius: 12,
+                      padding: 12,
+                    }}
+                  >
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Text style={{ color: colors.text, fontWeight: '700', fontSize: 14, flex: 1 }} numberOfLines={1}>
+                        {h.name}
+                      </Text>
+                      {h.distanceFormatted ? (
+                        <Text style={{ color: Palette.primaryBlue, fontSize: 11, fontWeight: '700' }}>
+                          📍 {h.distanceFormatted}
+                        </Text>
+                      ) : null}
+                    </View>
+                    <Text style={{ color: colors.textSecondary, fontSize: 12, marginTop: 2 }} numberOfLines={1}>
+                      {h.area ? `${h.area}, ` : ''}{h.city} • {h.type || 'Hospital'}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })
+            )}
+          </ScrollView>
+        ) : Platform.OS === 'web' ? (
+          <View style={styles.webView}>
+            <iframe
+              title="Arovia Live Hospital Map"
+              srcDoc={generateLeafletHtml()}
+              style={{ width: '100%', height: '100%', border: 'none' }}
+            />
           </View>
         ) : (
           <WebView
             ref={webViewRef}
             originWhitelist={['*']}
-            source={{ html: generateLeafletHtml() }}
+            source={{ html: generateLeafletHtml(), baseUrl: 'https://arovia.in' }}
             style={styles.webView}
             onMessage={handleWebViewMessage}
+            onError={() => setMapError(true)}
+            onHttpError={() => setMapError(true)}
+            renderError={() => <View />}
             javaScriptEnabled={true}
             domStorageEnabled={true}
             scalesPageToFit={true}
@@ -553,11 +712,11 @@ export default function LiveMapScreen() {
         )}
 
         {/* Floating Hospital Count Badge */}
-        {!loading && (
+        {!loading && !showListFallback && !mapError && (
           <View style={styles.countFloatingBadge}>
             <Ionicons name="medkit" size={14} color="#0284C7" />
             <Text style={styles.countFloatingText}>
-              {filteredHospitals.length} hospitals within {selectedRadius} km
+              {t('map.hospitalsWithin', { count: filteredHospitals.length, km: selectedRadius })}
             </Text>
           </View>
         )}
@@ -579,7 +738,7 @@ export default function LiveMapScreen() {
               <View style={styles.sheetBadgeRow}>
                 <View style={styles.sheetSpecBadge}>
                   <Text style={styles.sheetSpecBadgeText}>
-                    {selectedHospital.type || 'Healthcare Facility'}
+                    {selectedHospital.type || 'Hospital'}
                   </Text>
                 </View>
                 {selectedHospital.distanceFormatted && (
@@ -589,9 +748,9 @@ export default function LiveMapScreen() {
                     </Text>
                   </View>
                 )}
-                {selectedHospital.verified && (
+                {(selectedHospital.isVerified || selectedHospital.verified) && (
                   <View style={styles.verifiedBadge}>
-                    <Text style={styles.verifiedBadgeText}>✓ Verified</Text>
+                    <Text style={styles.verifiedBadgeText}>✓ {t('hospitals.verified')}</Text>
                   </View>
                 )}
               </View>
@@ -626,7 +785,7 @@ export default function LiveMapScreen() {
                 }}
               >
                 <Ionicons name="call" size={15} color="#10B981" />
-                <Text style={styles.callBtnText}>Call</Text>
+                <Text style={styles.callBtnText}>{t('hospitals.call')}</Text>
               </TouchableOpacity>
             ) : null}
 
@@ -641,7 +800,7 @@ export default function LiveMapScreen() {
             >
               <Ionicons name="navigate" size={15} color={Palette.primaryBlue} />
               <Text style={[styles.sheetDirectionsBtnText, { color: Palette.primaryBlue }]}>
-                Directions
+                {t('hospitals.directions')}
               </Text>
             </TouchableOpacity>
 
@@ -654,7 +813,7 @@ export default function LiveMapScreen() {
                 })
               }
             >
-              <Text style={styles.sheetDetailsBtnText}>Details →</Text>
+              <Text style={styles.sheetDetailsBtnText}>{t('hospitals.details')} →</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -663,9 +822,11 @@ export default function LiveMapScreen() {
       {/* Manual Location Selector Modal */}
       <LocationSelectorModal
         visible={showLocationModal}
-        districts={gujaratData.districts || []}
-        currentCity={cityName}
-        onSelectLocation={handleSelectManualCity}
+        title={t('home.selectGujaratCity')}
+        data={GUJARAT_CITY_OPTIONS}
+        selectedItem={cityName}
+        onSelect={handleSelectManualCity}
+        placeholder={t('common.searchCitiesPlaceholder')}
         onClose={() => setShowLocationModal(false)}
       />
 

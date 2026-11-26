@@ -19,12 +19,14 @@ import gujaratData from '../../constants/gujaratLocations.json';
 import LocationSelectorModal from '../../components/LocationSelectorModal';
 import LocationDetector from '../../components/LocationDetector';
 import { matchDistrictAndCity } from '../../utils/locationService';
+import { useTranslation } from 'react-i18next';
 
 export default function RegisterScreen() {
   const router = useRouter();
   const { redirect } = useLocalSearchParams();
   const { register } = useAuth();
   const { colors, isDark } = useAppTheme();
+  const { t } = useTranslation();
 
   // Basic Account Credentials
   const [name, setName] = useState('');
@@ -103,33 +105,33 @@ export default function RegisterScreen() {
   const handleRegister = async () => {
     // 1. Validations
     if (!name.trim()) {
-      setErrorMsg('Full Name is required.');
+      setErrorMsg(`${t('auth.fullName')}: ${t('errors.fieldRequired')}`);
       return;
     }
 
     const emailRegex = /^\S+@\S+\.\S+$/;
     if (!emailRegex.test(email.trim())) {
-      setErrorMsg('Please enter a valid email address.');
+      setErrorMsg(t('errors.invalidEmail'));
       return;
     }
 
     if (mobile.trim() && !/^[0-9]{10}$/.test(mobile.trim())) {
-      setErrorMsg('Please enter a valid 10-digit mobile number.');
+      setErrorMsg(t('errors.invalidPhone'));
       return;
     }
 
     if (password.length < 6) {
-      setErrorMsg('Password must be at least 6 characters long.');
+      setErrorMsg(t('errors.invalidPassword'));
       return;
     }
 
     if (password !== confirmPassword) {
-      setErrorMsg('Passwords do not match.');
+      setErrorMsg(t('errors.passwordMismatch'));
       return;
     }
 
     if (!selectedDistrict?.name || !selectedCity?.name) {
-      setErrorMsg('Please select your Gujarat District and City/Town.');
+      setErrorMsg(t('auth.selectDistrictCityError'));
       return;
     }
 
@@ -162,7 +164,7 @@ export default function RegisterScreen() {
       console.warn('Registration failed:', err.response?.data || err.message);
       const serverMsg = typeof err.response?.data === 'object' && err.response?.data?.message
         ? err.response.data.message
-        : 'Server connection error. Please make sure the backend is reachable.';
+        : t('auth.serverError');
       setErrorMsg(serverMsg);
     } finally {
       setLoading(false);
@@ -181,9 +183,9 @@ export default function RegisterScreen() {
             <View style={styles.logoBadge}>
               <Text style={styles.logoIcon}>💙</Text>
             </View>
-            <Text style={[styles.brandTitle, { color: colors.text }]}>Join Arovia</Text>
+            <Text style={[styles.brandTitle, { color: colors.text }]}>{t('auth.joinTitle')}</Text>
             <Text style={[styles.brandSubtitle, { color: colors.textSecondary }]}>
-              Create your healthcare account with Gujarat district coverage
+              {t('auth.joinSubtitle')}
             </Text>
           </View>
 
@@ -205,11 +207,11 @@ export default function RegisterScreen() {
 
             {/* SECTION: Personal Information */}
             <Text style={[styles.sectionHeading, { color: Palette.primaryBlue }]}>
-              1. Personal Details
+              {t('auth.personalStep')}
             </Text>
 
             <View style={styles.fieldGroup}>
-              <Text style={[styles.label, { color: colors.text }]}>Full Name *</Text>
+              <Text style={[styles.label, { color: colors.text }]}>{t('auth.fullName')} *</Text>
               <TextInput
                 style={[
                   styles.input,
@@ -219,7 +221,7 @@ export default function RegisterScreen() {
                     borderColor: colors.cardBorder,
                   },
                 ]}
-                placeholder="Dr. / Mr. / Ms. Full Name"
+                placeholder={t('auth.fullNamePlaceholder')}
                 placeholderTextColor="#94A3B8"
                 value={name}
                 onChangeText={setName}
@@ -227,7 +229,7 @@ export default function RegisterScreen() {
             </View>
 
             <View style={styles.fieldGroup}>
-              <Text style={[styles.label, { color: colors.text }]}>Email Address *</Text>
+              <Text style={[styles.label, { color: colors.text }]}>{t('auth.email')} *</Text>
               <TextInput
                 style={[
                   styles.input,
@@ -247,7 +249,7 @@ export default function RegisterScreen() {
             </View>
 
             <View style={styles.fieldGroup}>
-              <Text style={[styles.label, { color: colors.text }]}>Mobile Number (10 Digits)</Text>
+              <Text style={[styles.label, { color: colors.text }]}>{t('auth.mobileDigitsLabel')}</Text>
               <TextInput
                 style={[
                   styles.input,
@@ -268,7 +270,7 @@ export default function RegisterScreen() {
 
             {/* Password */}
             <View style={styles.fieldGroup}>
-              <Text style={[styles.label, { color: colors.text }]}>Password (Min. 6 characters) *</Text>
+              <Text style={[styles.label, { color: colors.text }]}>{t('auth.passwordMinHint')} *</Text>
               <View
                 style={[
                   styles.passwordWrap,
@@ -280,7 +282,7 @@ export default function RegisterScreen() {
               >
                 <TextInput
                   style={[styles.passwordInput, { color: colors.text }]}
-                  placeholder="Create password"
+                  placeholder={t('auth.createPasswordPlaceholder')}
                   placeholderTextColor="#94A3B8"
                   secureTextEntry={!showPassword}
                   value={password}
@@ -294,7 +296,7 @@ export default function RegisterScreen() {
 
             {/* Confirm Password */}
             <View style={styles.fieldGroup}>
-              <Text style={[styles.label, { color: colors.text }]}>Confirm Password *</Text>
+              <Text style={[styles.label, { color: colors.text }]}>{t('auth.confirmPassword')} *</Text>
               <View
                 style={[
                   styles.passwordWrap,
@@ -306,7 +308,7 @@ export default function RegisterScreen() {
               >
                 <TextInput
                   style={[styles.passwordInput, { color: colors.text }]}
-                  placeholder="Re-enter password"
+                  placeholder={t('auth.reenterPasswordPlaceholder')}
                   placeholderTextColor="#94A3B8"
                   secureTextEntry={!showPassword}
                   value={confirmPassword}
@@ -319,7 +321,7 @@ export default function RegisterScreen() {
 
             {/* SECTION: Gujarat Administrative Location */}
             <Text style={[styles.sectionHeading, { color: Palette.primaryBlue }]}>
-              2. Gujarat Location (LGD Government Directory)
+              {t('auth.locationStep')}
             </Text>
 
             {/* GPS Auto-Detect Button */}
@@ -327,7 +329,7 @@ export default function RegisterScreen() {
 
             {/* State (Fixed to Gujarat) */}
             <View style={styles.fieldGroup}>
-              <Text style={[styles.label, { color: colors.text }]}>State</Text>
+              <Text style={[styles.label, { color: colors.text }]}>{t('auth.stateLabel')}</Text>
               <View style={[styles.readOnlyPill, { backgroundColor: isDark ? '#0F172A' : '#E2E8F0' }]}>
                 <Text style={[styles.readOnlyText, { color: colors.text }]}>📍 {state}</Text>
               </View>
@@ -335,7 +337,7 @@ export default function RegisterScreen() {
 
             {/* District Selector */}
             <View style={styles.fieldGroup}>
-              <Text style={[styles.label, { color: colors.text }]}>District *</Text>
+              <Text style={[styles.label, { color: colors.text }]}>{t('auth.districtLabel')} *</Text>
               <TouchableOpacity
                 style={[
                   styles.selectorBtn,
@@ -347,7 +349,7 @@ export default function RegisterScreen() {
                 onPress={() => setActiveModal('district')}
               >
                 <Text style={[styles.selectorBtnText, { color: colors.text }]}>
-                  {selectedDistrict?.name || 'Select Gujarat District'}
+                  {selectedDistrict?.name || t('auth.selectDistrict')}
                 </Text>
                 <Text style={styles.chevronIcon}>⌄</Text>
               </TouchableOpacity>
@@ -355,7 +357,7 @@ export default function RegisterScreen() {
 
             {/* City / Town Selector */}
             <View style={styles.fieldGroup}>
-              <Text style={[styles.label, { color: colors.text }]}>City / Town *</Text>
+              <Text style={[styles.label, { color: colors.text }]}>{t('auth.cityTownLabel')} *</Text>
               <TouchableOpacity
                 style={[
                   styles.selectorBtn,
@@ -367,7 +369,7 @@ export default function RegisterScreen() {
                 onPress={() => setActiveModal('city')}
               >
                 <Text style={[styles.selectorBtnText, { color: colors.text }]}>
-                  {selectedCity?.name || 'Select City/Town'}
+                  {selectedCity?.name || t('auth.selectCityTown')}
                 </Text>
                 <Text style={styles.chevronIcon}>⌄</Text>
               </TouchableOpacity>
@@ -375,7 +377,7 @@ export default function RegisterScreen() {
 
             {/* Taluka (Auto-filled by City / Dependent) */}
             <View style={styles.fieldGroup}>
-              <Text style={[styles.label, { color: colors.text }]}>Taluka</Text>
+              <Text style={[styles.label, { color: colors.text }]}>{t('auth.talukaLabel')}</Text>
               <TextInput
                 style={[
                   styles.input,
@@ -385,7 +387,7 @@ export default function RegisterScreen() {
                     borderColor: colors.cardBorder,
                   },
                 ]}
-                placeholder="Taluka"
+                placeholder={t('auth.talukaLabel')}
                 placeholderTextColor="#94A3B8"
                 value={taluka}
                 onChangeText={setTaluka}
@@ -394,7 +396,7 @@ export default function RegisterScreen() {
 
             {/* Village / Area Selector or manual input */}
             <View style={styles.fieldGroup}>
-              <Text style={[styles.label, { color: colors.text }]}>Village / Area (Optional)</Text>
+              <Text style={[styles.label, { color: colors.text }]}>{t('auth.villageAreaLabel')}</Text>
               {selectedCity?.areas && selectedCity.areas.length > 0 ? (
                 <TouchableOpacity
                   style={[
@@ -407,7 +409,7 @@ export default function RegisterScreen() {
                   onPress={() => setActiveModal('area')}
                 >
                   <Text style={[styles.selectorBtnText, { color: colors.text }]}>
-                    {villageArea || 'Select Area/Locality'}
+                    {villageArea || t('auth.selectArea')}
                   </Text>
                   <Text style={styles.chevronIcon}>⌄</Text>
                 </TouchableOpacity>
@@ -421,7 +423,7 @@ export default function RegisterScreen() {
                       borderColor: colors.cardBorder,
                     },
                   ]}
-                  placeholder="e.g. Near Bus Stand, Main Bazar"
+                  placeholder={t('auth.areaPlaceholder')}
                   placeholderTextColor="#94A3B8"
                   value={villageArea}
                   onChangeText={setVillageArea}
@@ -431,7 +433,7 @@ export default function RegisterScreen() {
 
             {/* Note on Data Source */}
             <Text style={styles.dataSourceNote}>
-              Source: Local Government Directory (LGD), Ministry of Panchayati Raj, Government of India.
+              {t('auth.dataSourceNote')}
             </Text>
 
             {/* Submit Button */}
@@ -444,7 +446,7 @@ export default function RegisterScreen() {
               {loading ? (
                 <ActivityIndicator color="#FFFFFF" size="small" />
               ) : (
-                <Text style={styles.submitBtnText}>Create Arovia Account</Text>
+                <Text style={styles.submitBtnText}>{t('auth.registerBtn')}</Text>
               )}
             </TouchableOpacity>
           </View>
@@ -452,7 +454,7 @@ export default function RegisterScreen() {
           {/* Login Link */}
           <View style={styles.footerRow}>
             <Text style={[styles.footerText, { color: colors.textSecondary }]}>
-              Already registered?{' '}
+              {t('auth.haveAccount')}{' '}
             </Text>
             <TouchableOpacity
               onPress={() =>
@@ -462,7 +464,7 @@ export default function RegisterScreen() {
                 })
               }
             >
-              <Text style={[styles.loginLink, { color: Palette.primaryBlue }]}>Sign In</Text>
+              <Text style={[styles.loginLink, { color: Palette.primaryBlue }]}>{t('nav.signIn')}</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -472,33 +474,33 @@ export default function RegisterScreen() {
       <LocationSelectorModal
         visible={activeModal === 'district'}
         onClose={() => setActiveModal(null)}
-        title="Select Gujarat District"
+        title={t('auth.selectDistrict')}
         data={gujaratData.districts}
         selectedItem={selectedDistrict?.name}
         onSelect={handleSelectDistrict}
-        placeholder="Search all 33 Gujarat districts..."
+        placeholder={t('auth.searchDistricts')}
       />
 
       {/* City/Town Selection Modal */}
       <LocationSelectorModal
         visible={activeModal === 'city'}
         onClose={() => setActiveModal(null)}
-        title={`Cities & Towns in ${selectedDistrict?.name || 'District'}`}
+        title={`${t('auth.cityTownLabel')} (${selectedDistrict?.name || t('auth.districtLabel')})`}
         data={selectedDistrict?.cities || []}
         selectedItem={selectedCity?.name}
         onSelect={handleSelectCity}
-        placeholder="Search cities/towns..."
+        placeholder={t('auth.searchCities')}
       />
 
       {/* Village/Area Selection Modal */}
       <LocationSelectorModal
         visible={activeModal === 'area'}
         onClose={() => setActiveModal(null)}
-        title={`Areas in ${selectedCity?.name || 'City'}`}
+        title={`${t('auth.selectArea')} (${selectedCity?.name || t('profile.city')})`}
         data={selectedCity?.areas || []}
         selectedItem={villageArea}
         onSelect={(areaName) => setVillageArea(areaName)}
-        placeholder="Search localities/areas..."
+        placeholder={t('auth.searchAreas')}
       />
     </SafeAreaView>
   );

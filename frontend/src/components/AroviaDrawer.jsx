@@ -233,7 +233,7 @@ export default function AroviaDrawer({ visible, onClose, activeRoute = 'Home' })
                           {t('nav.guestUser') || 'Guest Visitor'}
                         </Text>
                         <Text style={[styles.userEmail, { color: colors.textSecondary }]}>
-                          Sign in for full access
+                          {t('nav.signInForAccess')}
                         </Text>
                       </View>
                     </View>
@@ -304,7 +304,7 @@ export default function AroviaDrawer({ visible, onClose, activeRoute = 'Home' })
                 <TouchableOpacity style={styles.navItem} onPress={toggleTheme} activeOpacity={0.7}>
                   <Text style={styles.navIcon}>{isDark ? '☀️' : '🌙'}</Text>
                   <Text style={[styles.navText, { color: colors.text }]}>
-                    {isDark ? 'Light Mode' : 'Dark Mode'}
+                    {isDark ? t('settings.lightMode') : t('settings.darkMode')}
                   </Text>
                 </TouchableOpacity>
 
@@ -342,18 +342,18 @@ export default function AroviaDrawer({ visible, onClose, activeRoute = 'Home' })
                   style={styles.emergencyPill}
                   onPress={() => {
                     Alert.alert(
-                      'Emergency Helpline',
-                      'Call Gujarat Emergency Ambulance (108) now?',
+                      t('home.emergencyConfirmTitle'),
+                      t('home.emergencyConfirmMsg'),
                       [
-                        { text: 'Cancel', style: 'cancel' },
-                        { text: 'Call 108', onPress: () => Linking.openURL('tel:108') },
+                        { text: t('common.cancel'), style: 'cancel' },
+                        { text: t('home.call108Now'), onPress: () => Linking.openURL('tel:108') },
                       ]
                     );
                   }}
                   activeOpacity={0.8}
                 >
                   <Text style={styles.emergencyPillIcon}>🚨</Text>
-                  <Text style={styles.emergencyPillText}>Emergency? Call 108</Text>
+                  <Text style={styles.emergencyPillText}>{t('home.emergency')}</Text>
                 </TouchableOpacity>
               </View>
             </SafeAreaView>
@@ -365,33 +365,33 @@ export default function AroviaDrawer({ visible, onClose, activeRoute = 'Home' })
       <Modal visible={activeModal === 'help'} transparent animationType="slide">
         <Pressable style={styles.infoModalBackdrop} onPress={() => setActiveModal(null)}>
           <View style={[styles.infoSheet, { backgroundColor: isDark ? '#0F172A' : '#FFFFFF' }]}>
-            <Text style={[styles.infoSheetTitle, { color: colors.text }]}>🛟 Help & Support</Text>
+            <Text style={[styles.infoSheetTitle, { color: colors.text }]}>🛟 {t('nav.helpSupport')}</Text>
             <Text style={[styles.infoSheetBody, { color: colors.textSecondary }]}>
-              Arovia helps you navigate healthcare facilities across Gujarat with verified hospital details and AI symptom guidance.
+              {t('drawer.helpIntro')}
             </Text>
 
             <View style={styles.infoBox}>
-              <Text style={styles.infoBoxTitle}>🚨 Emergency Medical Helpline</Text>
-              <Text style={styles.infoBoxDesc}>Toll-Free 24x7 Ambulance across Gujarat</Text>
+              <Text style={styles.infoBoxTitle}>{t('drawer.emergencyHelplineTitle')}</Text>
+              <Text style={styles.infoBoxDesc}>{t('drawer.tollFree24x7')}</Text>
               <TouchableOpacity
                 style={styles.call108Btn}
                 onPress={() => Linking.openURL('tel:108')}
               >
-                <Text style={styles.call108Text}>📞 Call 108 Now</Text>
+                <Text style={styles.call108Text}>📞 {t('home.call108Now')}</Text>
               </TouchableOpacity>
             </View>
 
             <View style={styles.infoBox}>
-              <Text style={styles.infoBoxTitle}>✉️ Contact Support</Text>
-              <Text style={styles.infoBoxDesc}>Email: support@arovia.in</Text>
-              <Text style={styles.infoBoxDesc}>Hours: Monday – Saturday, 9 AM – 6 PM</Text>
+              <Text style={styles.infoBoxTitle}>{t('drawer.contactSupport')}</Text>
+              <Text style={styles.infoBoxDesc}>{t('drawer.supportEmail')}</Text>
+              <Text style={styles.infoBoxDesc}>{t('drawer.supportHours')}</Text>
             </View>
 
             <TouchableOpacity
               style={[styles.closeSheetBtn, { backgroundColor: Palette.primaryBlue }]}
               onPress={() => setActiveModal(null)}
             >
-              <Text style={styles.closeSheetBtnText}>Close</Text>
+              <Text style={styles.closeSheetBtnText}>{t('common.close')}</Text>
             </TouchableOpacity>
           </View>
         </Pressable>
@@ -401,36 +401,36 @@ export default function AroviaDrawer({ visible, onClose, activeRoute = 'Home' })
       <Modal visible={activeModal === 'about'} transparent animationType="slide">
         <Pressable style={styles.infoModalBackdrop} onPress={() => setActiveModal(null)}>
           <View style={[styles.infoSheet, { backgroundColor: isDark ? '#0F172A' : '#FFFFFF' }]}>
-            <Text style={[styles.infoSheetTitle, { color: colors.text }]}>ℹ️ About Arovia</Text>
+            <Text style={[styles.infoSheetTitle, { color: colors.text }]}>ℹ️ {t('nav.about')}</Text>
             <Text style={[styles.infoSheetBody, { color: colors.textSecondary }]}>
-              Arovia is an AI-powered healthcare navigator designed for Gujarat, India. Our goal is to make healthcare discovery fast, transparent, and accessible to everyone.
+              {t('drawer.aboutIntro')}
             </Text>
             <View style={styles.infoBullet}>
               <Text style={styles.infoBulletIcon}>🏥</Text>
               <Text style={[styles.infoBulletText, { color: colors.text }]}>
-                Verified hospitals across all 33 Gujarat districts from Government LGD records.
+                {t('drawer.aboutBullet1')}
               </Text>
             </View>
             <View style={styles.infoBullet}>
               <Text style={styles.infoBulletIcon}>🩺</Text>
               <Text style={[styles.infoBulletText, { color: colors.text }]}>
-                AI Clinical Urgency assessment with triage recommendations.
+                {t('drawer.aboutBullet2')}
               </Text>
             </View>
             <View style={styles.infoBullet}>
               <Text style={styles.infoBulletIcon}>🌐</Text>
               <Text style={[styles.infoBulletText, { color: colors.text }]}>
-                Full trilingual support in English, Gujarati (ગુજરાતી), and Hindi (हिन्दी).
+                {t('drawer.aboutBullet3')}
               </Text>
             </View>
             <Text style={[styles.versionText, { color: colors.textSecondary }]}>
-              Version 1.0.0 (Expo SDK 58)
+              {t('common.version')} 1.0.0 (Expo SDK 58)
             </Text>
             <TouchableOpacity
               style={[styles.closeSheetBtn, { backgroundColor: Palette.primaryBlue }]}
               onPress={() => setActiveModal(null)}
             >
-              <Text style={styles.closeSheetBtnText}>Close</Text>
+              <Text style={styles.closeSheetBtnText}>{t('common.close')}</Text>
             </TouchableOpacity>
           </View>
         </Pressable>
@@ -440,19 +440,17 @@ export default function AroviaDrawer({ visible, onClose, activeRoute = 'Home' })
       <Modal visible={activeModal === 'privacy'} transparent animationType="slide">
         <Pressable style={styles.infoModalBackdrop} onPress={() => setActiveModal(null)}>
           <View style={[styles.infoSheet, { backgroundColor: isDark ? '#0F172A' : '#FFFFFF' }]}>
-            <Text style={[styles.infoSheetTitle, { color: colors.text }]}>🛡️ Privacy Policy</Text>
+            <Text style={[styles.infoSheetTitle, { color: colors.text }]}>🛡️ {t('nav.privacyPolicy')}</Text>
             <ScrollView style={{ maxHeight: 260 }}>
               <Text style={[styles.infoSheetBody, { color: colors.textSecondary }]}>
-                1. Location Privacy: Arovia accesses GPS location only with your explicit foreground permission to compute distances to nearby hospitals. We never track your location in the background.{'\n\n'}
-                2. Medical Data: Any symptoms submitted to the AI Symptom Navigator are used solely for immediate educational triage and are never shared with third-party advertisers.{'\n\n'}
-                3. Account Security: Your passwords are encrypted with bcrypt and JWT authentication tokens are stored securely on your device using AsyncStorage.
+                {t('drawer.privacyContent')}
               </Text>
             </ScrollView>
             <TouchableOpacity
               style={[styles.closeSheetBtn, { backgroundColor: Palette.primaryBlue, marginTop: 12 }]}
               onPress={() => setActiveModal(null)}
             >
-              <Text style={styles.closeSheetBtnText}>I Understand</Text>
+              <Text style={styles.closeSheetBtnText}>{t('common.understand')}</Text>
             </TouchableOpacity>
           </View>
         </Pressable>
@@ -462,19 +460,17 @@ export default function AroviaDrawer({ visible, onClose, activeRoute = 'Home' })
       <Modal visible={activeModal === 'terms'} transparent animationType="slide">
         <Pressable style={styles.infoModalBackdrop} onPress={() => setActiveModal(null)}>
           <View style={[styles.infoSheet, { backgroundColor: isDark ? '#0F172A' : '#FFFFFF' }]}>
-            <Text style={[styles.infoSheetTitle, { color: colors.text }]}>📋 Terms & Conditions</Text>
+            <Text style={[styles.infoSheetTitle, { color: colors.text }]}>📋 {t('nav.terms')}</Text>
             <ScrollView style={{ maxHeight: 260 }}>
               <Text style={[styles.infoSheetBody, { color: colors.textSecondary }]}>
-                1. Educational Healthcare Guidance: Arovia provides informational guidance only. AI triage results do NOT constitute a medical diagnosis or medical advice.{'\n\n'}
-                2. Emergencies: In case of life-threatening emergencies, cardiac symptoms, or acute trauma, users must immediately dial 108 or proceed to the nearest emergency room.{'\n\n'}
-                3. Hospital Listings: Hospital timings, fee estimates, and bed availability are based on official directories and may vary. Please contact the hospital directly before traveling.
+                {t('drawer.termsContent')}
               </Text>
             </ScrollView>
             <TouchableOpacity
               style={[styles.closeSheetBtn, { backgroundColor: Palette.primaryBlue, marginTop: 12 }]}
               onPress={() => setActiveModal(null)}
             >
-              <Text style={styles.closeSheetBtnText}>Accept</Text>
+              <Text style={styles.closeSheetBtnText}>{t('common.accept')}</Text>
             </TouchableOpacity>
           </View>
         </Pressable>

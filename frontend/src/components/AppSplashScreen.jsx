@@ -82,9 +82,9 @@ export default function AppSplashScreen({ onFinish }) {
         ]}
       >
         <View style={styles.iconBox}>
-          <Text style={styles.iconEmoji}>💰</Text>
+          <Text style={styles.iconEmoji}>💙</Text>
         </View>
-        <Text style={styles.appName}>ExpenseTracker</Text>
+        <Text style={styles.appName}>Arovia</Text>
       </Animated.View>
 
       {/* Tagline */}
@@ -97,12 +97,12 @@ export default function AppSplashScreen({ onFinish }) {
           },
         ]}
       >
-        <Text style={styles.tagline}>Smart spending, smarter saving</Text>
+        <Text style={styles.tagline}>AI Healthcare Navigator</Text>
       </Animated.View>
 
       {/* Bottom brand */}
       <View style={styles.bottomBrand}>
-        <Text style={styles.bottomText}>Made with ❤️ for your finances</Text>
+        <Text style={styles.bottomText}>Made with ❤️ for your health</Text>
       </View>
     </Animated.View>
   );

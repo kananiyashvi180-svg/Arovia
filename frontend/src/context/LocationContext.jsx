@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { reverseGeocodeLocation, findNearestGujaratDistrict } from '../utils/locationService';
+import { reverseGeocodeLocation, findCentroidByCityOrDistrict } from '../utils/locationService';
 
 export const LocationContext = createContext(null);
 
@@ -190,23 +190,26 @@ export function LocationProvider({ children }) {
       }
     }
 
-    if (!finalCoords && districtName) {
-      const nearest = findNearestGujaratDistrict(22.25, 71.0); // Gujarat centroid search
-      if (nearest) {
-        finalCoords = { latitude: nearest.lat, longitude: nearest.lon, accuracy: null };
+    if (!finalCoords && (cityName || districtName)) {
+      const matched = findCentroidByCityOrDistrict(cityName, districtName);
+      if (matched) {
+        finalCoords = { latitude: matched.lat, longitude: matched.lon, accuracy: null };
       }
     }
 
+    const resolvedDistrict = districtName || findCentroidByCityOrDistrict(cityName, '')?.name || 'Gujarat';
+    const cleanCity = typeof cityName === 'string' && cityName.includes(',') ? cityName.split(',')[0].trim() : cityName;
+
     const details = {
-      city: cityName,
-      district: districtName,
+      city: cleanCity,
+      district: resolvedDistrict,
       state: 'Gujarat',
-      taluka: cityName,
+      taluka: cleanCity,
       villageArea: '',
       postalCode: '',
       country: 'India',
-      displayName: `${cityName}, ${districtName}, Gujarat`,
-      formattedAddress: `${cityName}, ${districtName}, Gujarat`,
+      displayName: `${cleanCity}, ${resolvedDistrict}, Gujarat`,
+      formattedAddress: `${cleanCity}, ${resolvedDistrict}, Gujarat`,
       latitude: finalCoords?.latitude || null,
       longitude: finalCoords?.longitude || null,
     };
@@ -220,6 +223,7 @@ export function LocationProvider({ children }) {
     setError(null);
 
     await AsyncStorage.setItem(MANUAL_CITY_KEY, JSON.stringify(details));
+    return { coords: finalCoords, details };
   }, []);
 
   return (

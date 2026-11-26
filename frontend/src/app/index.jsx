@@ -22,7 +22,7 @@ import { useAppTheme } from '../context/ThemeContext';
 import { useLocation } from '../context/LocationContext';
 import { Palette, Shadows } from '../constants/theme';
 import { getHospitals, getNearbyHospitals, reverseGeocodeBackend } from '../services/medicalService';
-import gujaratData from '../constants/gujaratLocations.json';
+import { GUJARAT_CITY_OPTIONS } from '../utils/locationService';
 import LocationSelectorModal from '../components/LocationSelectorModal';
 import AroviaHeader from '../components/AroviaHeader';
 import AroviaBottomNav from '../components/AroviaBottomNav';
@@ -32,24 +32,15 @@ import { useTranslation } from 'react-i18next';
 const MANUAL_CITY_KEY = '@arovia_manual_city';
 const LEGACY_MANUAL_CITY_KEY = '@mediguide_manual_city';
 
-// Flatten cities across all 33 Gujarat districts for quick, unified search
-const GUJARAT_CITY_OPTIONS = gujaratData.districts.flatMap((d) =>
-  d.cities.map((c) => ({
-    name: `${c.name}, ${d.name}`,
-    cityName: c.name,
-    districtName: d.name,
-  }))
-);
-
 const SPECIALIZATIONS = [
-  { id: '1', name: 'Cardiology', icon: '❤️' },
-  { id: '2', name: 'Neurology', icon: '🧠' },
-  { id: '3', name: 'Orthopedics', icon: '🦴' },
-  { id: '4', name: 'Pediatrics', icon: '👶' },
-  { id: '5', name: 'Cancer Care', icon: '🎗️' },
-  { id: '6', name: 'General Medicine', icon: '🩺' },
-  { id: '7', name: 'Dermatology', icon: '🔬' },
-  { id: '8', name: 'Gynecology', icon: '🌸' },
+  { id: '1', name: 'Cardiology', labelKey: 'hospitals.categories.cardiology', icon: '❤️' },
+  { id: '2', name: 'Neurology', labelKey: 'hospitals.categories.neurology', icon: '🧠' },
+  { id: '3', name: 'Orthopedics', labelKey: 'hospitals.categories.orthopedics', icon: '🦴' },
+  { id: '4', name: 'Pediatrics', labelKey: 'hospitals.categories.pediatrics', icon: '👶' },
+  { id: '5', name: 'Cancer Care', labelKey: 'hospitals.categories.cancer', icon: '🎗️' },
+  { id: '6', name: 'General Medicine', labelKey: 'hospitals.categories.general', icon: '🩺' },
+  { id: '7', name: 'Dermatology', labelKey: 'hospitals.categories.dermatology', icon: '🔬' },
+  { id: '8', name: 'Gynecology', labelKey: 'hospitals.categories.gynecology', icon: '🌸' },
 ];
 
 export default function HomeScreen() {
@@ -274,8 +265,8 @@ export default function HomeScreen() {
               </View>
               <Text style={[styles.locationCityText, { color: colors.text }]} numberOfLines={1}>
                 {locLoading
-                  ? 'Locking device GPS...'
-                  : (locationDetails?.displayName || locationDetails?.city || 'Tap to detect GPS')}
+                  ? t('home.lockingGps')
+                  : (locationDetails?.displayName || locationDetails?.city || t('home.tapToDetectGps'))}
               </Text>
             </View>
           </TouchableOpacity>
@@ -326,8 +317,8 @@ export default function HomeScreen() {
             <View style={styles.heroBadgeDot} />
             <Text style={styles.heroBadgeText}>
               {isAuthenticated
-                ? `${t('home.welcomeBack') || 'Welcome back'}, ${user?.name ? user.name.split(' ')[0] : 'Patient'}`
-                : 'Verified Gujarat Healthcare Directory'}
+                ? `${t('home.welcomeBack') || 'Welcome back'}, ${user?.name ? user.name.split(' ')[0] : t('home.patient')}`
+                : t('home.verifiedDirectory')}
             </Text>
           </View>
 
@@ -399,7 +390,7 @@ export default function HomeScreen() {
                 {t('nav.symptomsChecker') || 'Check Symptoms'}
               </Text>
               <Text style={[styles.actionCardSubtitle, { color: colors.textSecondary }]}>
-                AI Clinical Triage
+                {t('home.actionSubtitles.aiTriage')}
               </Text>
             </TouchableOpacity>
 
@@ -427,7 +418,7 @@ export default function HomeScreen() {
                 {t('home.features.verified') || 'Explore Hospitals'}
               </Text>
               <Text style={[styles.actionCardSubtitle, { color: colors.textSecondary }]}>
-                Hospital Directory
+                {t('home.actionSubtitles.hospitalDirectory')}
               </Text>
             </TouchableOpacity>
 
@@ -455,7 +446,7 @@ export default function HomeScreen() {
                 {t('nav.mapView') || 'Map Area View'}
               </Text>
               <Text style={[styles.actionCardSubtitle, { color: colors.textSecondary }]}>
-                Nearby Hospital Map
+                {t('home.actionSubtitles.nearbyMap')}
               </Text>
             </TouchableOpacity>
 
@@ -483,7 +474,7 @@ export default function HomeScreen() {
                 {t('nav.savedHospitals') || 'Saved Hospitals'}
               </Text>
               <Text style={[styles.actionCardSubtitle, { color: colors.textSecondary }]}>
-                Quick Bookmarks
+                {t('home.actionSubtitles.quickBookmarks')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -506,10 +497,10 @@ export default function HomeScreen() {
               </View>
               <View style={styles.symptomPromoText}>
                 <Text style={[styles.symptomPromoTitle, { color: isDark ? '#FFF' : '#134E4A' }]}>
-                  Not Feeling Well?
+                  {t('home.symptomPromoTitle')}
                 </Text>
                 <Text style={[styles.symptomPromoDesc, { color: isDark ? '#94A3B8' : '#0F766E' }]}>
-                  Describe your symptoms for instant AI clinical urgency screening and specialist guidance.
+                  {t('home.symptomPromoDesc')}
                 </Text>
               </View>
             </View>
@@ -525,7 +516,7 @@ export default function HomeScreen() {
               activeOpacity={0.85}
             >
               <Text style={styles.symptomCheckBtnText}>
-                Start Symptom Assessment →
+                {t('home.symptomPromoBtn')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -539,7 +530,7 @@ export default function HomeScreen() {
                 {t('home.nearbyHospitals') || 'Hospitals Near You'}
               </Text>
               <Text style={[styles.sectionSubtitle, { color: colors.textSecondary }]}>
-                Top-rated verified healthcare centers
+                {t('home.nearbySubtitle')}
               </Text>
             </View>
 
@@ -593,7 +584,7 @@ export default function HomeScreen() {
                         </Text>
                       </View>
                       <View style={styles.verifiedBadge}>
-                        <Text style={styles.verifiedBadgeText}>🛡️ Verified</Text>
+                        <Text style={styles.verifiedBadgeText}>🛡️ {t('common.verified')}</Text>
                       </View>
                     </View>
 
@@ -636,7 +627,7 @@ export default function HomeScreen() {
                         }}
                       >
                         <Text style={[styles.directionsBtnText, { color: Palette.primaryBlue }]}>
-                          🧭 Directions
+                          🧭 {t('hospitals.directions')}
                         </Text>
                       </TouchableOpacity>
 
@@ -644,7 +635,7 @@ export default function HomeScreen() {
                         style={[styles.detailsBtn, { backgroundColor: Palette.primaryBlue }]}
                         onPress={() => handleHospitalAction(item._id, 'view')}
                       >
-                        <Text style={styles.detailsBtnText}>View Details</Text>
+                        <Text style={styles.detailsBtnText}>{t('hospitals.viewDetails')}</Text>
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -678,7 +669,7 @@ export default function HomeScreen() {
                 activeOpacity={0.7}
               >
                 <Text style={styles.specIcon}>{spec.icon}</Text>
-                <Text style={[styles.specName, { color: colors.text }]}>{spec.name}</Text>
+                <Text style={[styles.specName, { color: colors.text }]}>{t(spec.labelKey) || spec.name}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
@@ -696,7 +687,7 @@ export default function HomeScreen() {
               </View>
 
               <Text style={styles.emergencyPromptTitle}>
-                Need Immediate Medical Assistance?
+                {t('home.emergencyPromptTitle')}
               </Text>
               <Text style={styles.emergencyPromptDesc}>
                 {t('home.emergencyDesc') ||
@@ -715,7 +706,7 @@ export default function HomeScreen() {
                 <Text style={styles.emergencyCallLabel}>
                   {t('home.call108Now') || 'Call 108'}
                 </Text>
-                <Text style={styles.emergencyCallSub}>Toll-Free Ambulance</Text>
+                <Text style={styles.emergencyCallSub}>{t('home.tollFreeAmbulance')}</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -733,7 +724,7 @@ export default function HomeScreen() {
         data={GUJARAT_CITY_OPTIONS}
         selectedItem={locationDetails?.city || ''}
         onSelect={handleSelectCity}
-        placeholder="Search cities across Gujarat (Dwarka, Jamnagar, Surat...)"
+        placeholder={t('common.searchCitiesPlaceholder')}
       />
 
       {/* 4 Bottom Tabs */}

@@ -12,38 +12,40 @@ import { useAuth } from '../context/AuthContext';
 import { useAppTheme } from '../context/ThemeContext';
 import AroviaHeader from '../components/AroviaHeader';
 import AroviaBottomNav from '../components/AroviaBottomNav';
-
-const MOCK_NOTIFICATIONS = [
-  {
-    id: '1',
-    title: 'Hospital Verification Update',
-    message: 'Apollo Hospitals Mumbai has updated their cardiology emergency desk schedule.',
-    time: '2 hours ago',
-    type: 'info',
-    unread: true,
-  },
-  {
-    id: '2',
-    title: 'Healthcare Advisory',
-    message: 'Seasonal influenza alert in your region. Check AI Symptom Checker for early symptom screening.',
-    time: '1 day ago',
-    type: 'alert',
-    unread: false,
-  },
-  {
-    id: '3',
-    title: 'Appointment Reminder',
-    message: 'Remember to carry previous prescriptions for your specialist consultation.',
-    time: '3 days ago',
-    type: 'reminder',
-    unread: false,
-  },
-];
+import { useTranslation } from 'react-i18next';
 
 export default function NotificationsScreen() {
   const router = useRouter();
   const { isAuthenticated, loading: authLoading } = useAuth();
   const { colors, isDark } = useAppTheme();
+  const { t } = useTranslation();
+
+  const notificationItems = [
+    {
+      id: '1',
+      title: t('notifications.item1Title'),
+      message: t('notifications.item1Msg'),
+      time: '2h',
+      type: 'info',
+      unread: true,
+    },
+    {
+      id: '2',
+      title: t('notifications.item2Title'),
+      message: t('notifications.item2Msg'),
+      time: '1d',
+      type: 'alert',
+      unread: false,
+    },
+    {
+      id: '3',
+      title: t('notifications.item3Title'),
+      message: t('notifications.item3Msg'),
+      time: '3d',
+      type: 'reminder',
+      unread: false,
+    },
+  ];
 
   React.useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -59,16 +61,16 @@ export default function NotificationsScreen() {
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
-      <AroviaHeader />
+      <AroviaHeader activeNav="Notifications" />
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.headerTitleRow}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-            <Text style={[styles.backText, { color: colors.primary }]}>← Back</Text>
+            <Text style={[styles.backText, { color: colors.primary }]}>← {t('common.back')}</Text>
           </TouchableOpacity>
-          <Text style={[styles.pageTitle, { color: colors.text }]}>Notifications</Text>
+          <Text style={[styles.pageTitle, { color: colors.text }]}>{t('notifications.title')}</Text>
         </View>
 
-        {MOCK_NOTIFICATIONS.map((item) => (
+        {notificationItems.map((item) => (
           <View
             key={item.id}
             style={[

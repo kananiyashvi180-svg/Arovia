@@ -23,7 +23,7 @@ import { Palette, Shadows } from '../constants/theme';
 import AroviaHeader from '../components/AroviaHeader';
 import AroviaBottomNav from '../components/AroviaBottomNav';
 import LocationSelectorModal from '../components/LocationSelectorModal';
-import gujaratData from '../constants/gujaratLocations.json';
+import { GUJARAT_CITY_OPTIONS } from '../utils/locationService';
 import { analyzeSymptoms, reverseGeocodeBackend } from '../services/medicalService';
 import {
   SUPPORTED_SYMPTOMS_CATALOG,
@@ -125,19 +125,30 @@ export default function SymptomCheckerScreen() {
     } catch (e) {}
   };
 
-  const handleSelectManualCity = (selected) => {
+  const handleSelectManualCity = async (selected) => {
     setShowLocationModal(false);
     if (!selected) return;
-    const cityObj = selected.city;
-    if (cityObj?.latitude && cityObj?.longitude) {
-      const newCoords = { latitude: cityObj.latitude, longitude: cityObj.longitude };
-      setUserCoords(newCoords);
-      setDetectedCity(cityObj.name);
+    const pickedCity =
+      typeof selected === 'string'
+        ? selected
+        : selected.cityName || selected.city?.name || selected.name || 'Gujarat';
+    const pickedDistrict =
+      typeof selected === 'string' ? '' : selected.districtName || '';
+
+    try {
+      const result = await setManualLocation(pickedCity, pickedDistrict);
+      const newCoords = result?.coords;
+      const cleanCity = result?.details?.city || pickedCity;
+      setDetectedCity(cleanCity);
       setLocationSource('manual');
-      setGpsAccuracy(null);
-      if (analysisResult) {
-        loadHospitalRecommendations(selectedRadius, sortBy, newCoords);
+      if (newCoords?.latitude && newCoords?.longitude) {
+        setUserCoords(newCoords);
+        if (analysisResult) {
+          loadHospitalRecommendations(selectedRadius, sortBy, newCoords);
+        }
       }
+    } catch (e) {
+      console.warn('Manual city select notice:', e.message);
     }
   };
 
@@ -160,7 +171,7 @@ export default function SymptomCheckerScreen() {
   // ── Analyze Clinical Urgency & Automatically Fetch Nearby Hospitals ──
   const handleAnalyze = async () => {
     if (selectedSymptoms.length === 0) {
-      setError('Please select or type at least one symptom.');
+      setError(t('symptoms.selectAtLeastOne'));
       return;
     }
 
@@ -189,10 +200,10 @@ export default function SymptomCheckerScreen() {
           scrollRef.current?.scrollTo({ y: 350, animated: true });
         }, 300);
       } else {
-        setError('Could not evaluate symptoms. Please try again.');
+        setError(t('symptoms.evalFailed'));
       }
     } catch (err) {
-      setError(err?.response?.data?.message || 'Failed to connect to clinical triage server.');
+      setError(err?.response?.data?.message || t('symptoms.serverConnectFail'));
     } finally {
       setAnalyzing(false);
     }
@@ -262,10 +273,10 @@ export default function SymptomCheckerScreen() {
               <Ionicons name="warning" size={24} color="#FFFFFF" />
               <View style={{ flex: 1, marginLeft: 8 }}>
                 <Text style={styles.emergencyBannerTitle}>
-                  POTENTIAL MEDICAL EMERGENCY — DO NOT DELAY
+                  {t('symptoms.emergencyBanner')}
                 </Text>
                 <Text style={styles.emergencyBannerSub}>
-                  Severe chest discomfort, breathing trouble, or acute neurological signs require immediate clinical intervention.
+                  {t('symptoms.emergencySub')}
                 </Text>
               </View>
             </View>
@@ -277,7 +288,7 @@ export default function SymptomCheckerScreen() {
                 activeOpacity={0.85}
               >
                 <Ionicons name="call" size={16} color="#FFFFFF" />
-                <Text style={styles.callBtnText}>Call 108 (Ambulance)</Text>
+                <Text style={styles.callBtnText}>{t('symptoms.call108')}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -286,7 +297,7 @@ export default function SymptomCheckerScreen() {
                 activeOpacity={0.85}
               >
                 <Ionicons name="shield-checkmark" size={16} color="#FFFFFF" />
-                <Text style={styles.callBtnText}>Call 112 (Emergency)</Text>
+                <Text style={styles.callBtnText}>{t('symptoms.call112')}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -306,10 +317,10 @@ export default function SymptomCheckerScreen() {
               </Text>
               <Text style={styles.locSub}>
                 {locLoading
-                  ? 'Detecting GPS coordinates...'
+                  ? t('symptoms.detectingGps')
                   : locationSource === 'gps'
-                  ? `Live Satellite GPS${gpsAccuracy ? ` (±${gpsAccuracy}m)` : ''}`
-                  : 'Selected City Area'}
+                  ? `${t('symptoms.liveSatelliteGps')}${gpsAccuracy ? ` (±${gpsAccuracy}m)` : ''}`
+                  : t('symptoms.selectedCityArea')}
               </Text>
             </View>
           </View>
@@ -320,7 +331,7 @@ export default function SymptomCheckerScreen() {
               onPress={() => setShowLocationModal(true)}
               activeOpacity={0.8}
             >
-              <Text style={[styles.cityChangeBtnText, { color: Palette.primaryBlue }]}>Change City</Text>
+              <Text style={[styles.cityChangeBtnText, { color: Palette.primaryBlue }]}>{t('home.changeCity')}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -340,9 +351,9 @@ export default function SymptomCheckerScreen() {
 
         {/* Header Title */}
         <View style={styles.titleWrap}>
-          <Text style={[styles.mainTitle, { color: colors.text }]}>Smart Symptom Analysis</Text>
+          <Text style={[styles.mainTitle, { color: colors.text }]}>{t('symptoms.title')}</Text>
           <Text style={[styles.subTitle, { color: colors.textSecondary }]}>
-            Select your health symptoms to receive clinical urgency triaging and automatically discover relevant nearby hospitals offering the right department.
+            {t('symptoms.subtitle')}
           </Text>
         </View>
 
@@ -350,7 +361,7 @@ export default function SymptomCheckerScreen() {
         <View style={styles.disclaimerPill}>
           <Ionicons name="shield-checkmark" size={16} color="#D97706" style={{ marginRight: 6 }} />
           <Text style={styles.disclaimerText}>
-            Medical Notice: Symptom analysis is informational triage guidance, not a diagnosis. Always consult a licensed physician.
+            {t('symptoms.disclaimer')}
           </Text>
         </View>
 
@@ -358,11 +369,11 @@ export default function SymptomCheckerScreen() {
         <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}>
           <View style={styles.cardHeaderRow}>
             <Text style={[styles.cardTitle, { color: colors.text }]}>
-              Selected Symptoms ({selectedSymptoms.length})
+              {t('symptoms.selected')} ({selectedSymptoms.length})
             </Text>
             {selectedSymptoms.length > 0 && (
               <TouchableOpacity onPress={() => setSelectedSymptoms([])}>
-                <Text style={styles.clearAllText}>Clear All</Text>
+                <Text style={styles.clearAllText}>{t('symptoms.clearAll')}</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -376,14 +387,14 @@ export default function SymptomCheckerScreen() {
                   onPress={() => toggleSymptom(sym)}
                   activeOpacity={0.7}
                 >
-                  <Text style={styles.selectedChipText}>{sym}</Text>
+                  <Text style={styles.selectedChipText}>{t(`symptoms.catalog.${sym}`, sym)}</Text>
                   <Text style={styles.removeChipText}>✕</Text>
                 </TouchableOpacity>
               ))}
             </View>
           ) : (
             <Text style={[styles.noSymptomsText, { color: colors.textSecondary }]}>
-              No symptoms selected yet. Tap from the common symptoms catalog below or type your custom symptom.
+              {t('symptoms.noSymptoms')}
             </Text>
           )}
 
@@ -391,23 +402,23 @@ export default function SymptomCheckerScreen() {
           <View style={[styles.inputRow, { backgroundColor: isDark ? '#0B132B' : '#F1F5F9', borderColor: colors.cardBorder }]}>
             <TextInput
               style={[styles.textInput, { color: colors.text }]}
-              placeholder="Type other symptom (e.g. ear pain, blurred vision)..."
+              placeholder={t('symptoms.customPlaceholder')}
               placeholderTextColor={colors.textSecondary}
               value={customSymptom}
               onChangeText={setCustomSymptom}
               onSubmitEditing={addCustomSymptom}
             />
             <TouchableOpacity style={styles.addBtn} onPress={addCustomSymptom} activeOpacity={0.8}>
-              <Text style={styles.addBtnText}>+ Add</Text>
+              <Text style={styles.addBtnText}>{t('symptoms.addBtn')}</Text>
             </TouchableOpacity>
           </View>
         </View>
 
         {/* ── Supported Symptoms Catalog ── */}
         <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}>
-          <Text style={[styles.cardTitle, { color: colors.text }]}>Common Health Symptoms</Text>
+          <Text style={[styles.cardTitle, { color: colors.text }]}>{t('symptoms.commonSymptoms')}</Text>
           <Text style={[styles.catalogSub, { color: colors.textSecondary }]}>
-            Tap symptoms you are currently experiencing:
+            {t('symptoms.commonSub')}
           </Text>
           <View style={styles.symptomsGrid}>
             {SUPPORTED_SYMPTOMS_CATALOG.map((item) => {
@@ -427,7 +438,7 @@ export default function SymptomCheckerScreen() {
                 >
                   <Text style={styles.symptomGridIcon}>{item.icon}</Text>
                   <Text style={[styles.symptomGridText, { color: selected ? '#FFFFFF' : colors.text }]}>
-                    {item.label}
+                    {t(`symptoms.catalog.${item.label}`, item.label)}
                   </Text>
                 </TouchableOpacity>
               );
@@ -453,12 +464,12 @@ export default function SymptomCheckerScreen() {
           {analyzing ? (
             <View style={styles.loadingRow}>
               <ActivityIndicator color="#FFFFFF" size="small" />
-              <Text style={styles.analyzeBtnText}>Analyzing Symptoms & Locating Hospitals...</Text>
+              <Text style={styles.analyzeBtnText}>{t('symptoms.analyzingBtn')}</Text>
             </View>
           ) : (
             <View style={styles.loadingRow}>
               <Ionicons name="pulse" size={18} color="#FFFFFF" />
-              <Text style={styles.analyzeBtnText}>Analyze Clinical Urgency & Find Hospitals</Text>
+              <Text style={styles.analyzeBtnText}>{t('symptoms.analyzeBtn')}</Text>
             </View>
           )}
         </TouchableOpacity>
@@ -470,9 +481,9 @@ export default function SymptomCheckerScreen() {
           <View style={[styles.resultsCard, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}>
             <View style={styles.resultsHeader}>
               <View style={{ flex: 1 }}>
-                <Text style={[styles.resultsTitle, { color: colors.text }]}>Clinical Evaluation</Text>
+                <Text style={[styles.resultsTitle, { color: colors.text }]}>{t('symptoms.clinicalEvaluation')}</Text>
                 <Text style={[styles.resultsSub, { color: colors.textSecondary }]}>
-                  Triaged based on {analysisResult.analyzedSymptoms?.length} reported symptom(s)
+                  {t('symptoms.triagedBasedOn', { count: analysisResult.analyzedSymptoms?.length || selectedSymptoms.length })}
                 </Text>
               </View>
               <View
@@ -507,7 +518,7 @@ export default function SymptomCheckerScreen() {
             {/* Relevant Medical Departments (Specialties) */}
             <View style={styles.specialtiesBlock}>
               <Text style={[styles.sectionSubtitle, { color: colors.text }]}>
-                🏥 Relevant Medical Department(s):
+                {t('symptoms.relevantDepts')}
               </Text>
               <View style={styles.deptBadgeRow}>
                 {analysisResult.relevantSpecialties?.map((dept, idx) => (
@@ -523,7 +534,7 @@ export default function SymptomCheckerScreen() {
 
             {/* Possible Explanations / Conditions */}
             <Text style={[styles.sectionSubtitle, { color: colors.text, marginBottom: 8 }]}>
-              📋 Possible Clinical Explanations:
+              {t('symptoms.possibleConditions')}
             </Text>
             {analysisResult.possibleConditions?.map((cond, idx) => (
               <View key={idx} style={[styles.conditionBlock, { backgroundColor: isDark ? '#0B132B' : '#F8FAFC', borderColor: colors.cardBorder }]}>
@@ -539,13 +550,13 @@ export default function SymptomCheckerScreen() {
                 </Text>
 
                 <View style={styles.specialistRow}>
-                  <Text style={styles.specialistLabel}>Specialist: </Text>
+                  <Text style={styles.specialistLabel}>{t('symptoms.recommendedSpecialist')} </Text>
                   <Text style={styles.specialistValue}>{cond.recommendedSpecialist}</Text>
                 </View>
 
                 {cond.nextSteps && cond.nextSteps.length > 0 && (
                   <View style={styles.stepsWrap}>
-                    <Text style={styles.nextStepsLabel}>Recommended Next Steps:</Text>
+                    <Text style={styles.nextStepsLabel}>{t('symptoms.nextSteps')}</Text>
                     {cond.nextSteps.map((step, sIdx) => (
                       <View key={sIdx} style={styles.stepItemRow}>
                         <Ionicons name="checkmark-circle" size={14} color="#10B981" style={{ marginTop: 2 }} />
@@ -558,7 +569,7 @@ export default function SymptomCheckerScreen() {
             ))}
 
             <Text style={styles.disclaimerBottom}>
-              ⚕️ {analysisResult.medicalDisclaimer || 'Arovia informational triage guidance only.'}
+              ⚕️ {analysisResult.medicalDisclaimer || t('symptoms.disclaimerBottom')}
             </Text>
           </View>
         )}
@@ -571,12 +582,12 @@ export default function SymptomCheckerScreen() {
             <View style={styles.hospSectionHeader}>
               <View style={{ flex: 1 }}>
                 <Text style={[styles.hospSectionTitle, { color: colors.text }]}>
-                  Recommended Hospitals Near You
+                  {t('symptoms.recommendedTitle')}
                 </Text>
                 <Text style={[styles.hospSectionSub, { color: colors.textSecondary }]}>
-                  Facilities near {detectedCity} offering{' '}
+                  {t('symptoms.facilitiesNear', { city: detectedCity })}{' '}
                   <Text style={{ fontWeight: '700', color: Palette.primaryBlue }}>
-                    {analysisResult.relevantSpecialties?.join(', ') || 'Relevant Departments'}
+                    {analysisResult.relevantSpecialties?.join(', ') || t('symptoms.relevantDepartmentsFallback')}
                   </Text>
                 </Text>
               </View>
@@ -586,7 +597,7 @@ export default function SymptomCheckerScreen() {
             <View style={styles.hospControlsRow}>
               {/* Radius Chips */}
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.radiusPillsRow}>
-                <Text style={[styles.radiusPrefix, { color: colors.textSecondary }]}>Radius:</Text>
+                <Text style={[styles.radiusPrefix, { color: colors.textSecondary }]}>{t('map.radiusLabel')}</Text>
                 {RADIUS_OPTIONS.map((opt) => {
                   const active = selectedRadius === opt.value;
                   return (
@@ -625,7 +636,7 @@ export default function SymptomCheckerScreen() {
                   onPress={() => handleSortChange('distance')}
                 >
                   <Text style={[styles.sortPillText, sortBy === 'distance' && styles.sortPillTextActive]}>
-                    Nearest First
+                    {t('hospitals.nearestFirst')}
                   </Text>
                 </TouchableOpacity>
 
@@ -637,7 +648,7 @@ export default function SymptomCheckerScreen() {
                   onPress={() => handleSortChange('rating')}
                 >
                   <Text style={[styles.sortPillText, sortBy === 'rating' && styles.sortPillTextActive]}>
-                    Highest Rated
+                    {t('hospitals.highestRated')}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -658,7 +669,7 @@ export default function SymptomCheckerScreen() {
               <View style={styles.hospLoadingBox}>
                 <ActivityIndicator size="small" color={Palette.primaryBlue} />
                 <Text style={[styles.hospLoadingText, { color: colors.textSecondary }]}>
-                  Locating verified hospitals near {detectedCity}...
+                  {t('symptoms.locatingHospitals', { city: detectedCity })}
                 </Text>
               </View>
             ) : recommendations?.specialtyMatches && recommendations.specialtyMatches.length > 0 ? (
@@ -685,7 +696,7 @@ export default function SymptomCheckerScreen() {
                         )}
                         {hosp.isVerified && (
                           <View style={styles.verifiedBadge}>
-                            <Text style={styles.verifiedBadgeText}>✓ Verified</Text>
+                            <Text style={styles.verifiedBadgeText}>✓ {t('hospitals.verified')}</Text>
                           </View>
                         )}
                       </View>
@@ -711,7 +722,7 @@ export default function SymptomCheckerScreen() {
                       <View style={styles.matchedSpecPill}>
                         <Ionicons name="checkmark-done-circle" size={13} color="#16A34A" />
                         <Text style={styles.matchedSpecText}>
-                          Confirmed: {hosp.matchedSpecialty || hosp.type || 'Department Available'}
+                          {t('symptoms.confirmedTag')} {hosp.matchedSpecialty || hosp.type || t('symptoms.deptAvailableFallback')}
                         </Text>
                       </View>
 
@@ -729,7 +740,7 @@ export default function SymptomCheckerScreen() {
                         >
                           <Ionicons name="navigate" size={14} color={Palette.primaryBlue} />
                           <Text style={[styles.directionsBtnText, { color: Palette.primaryBlue }]}>
-                            Directions
+                            {t('hospitals.directions')}
                           </Text>
                         </TouchableOpacity>
 
@@ -743,7 +754,7 @@ export default function SymptomCheckerScreen() {
                             activeOpacity={0.8}
                           >
                             <Ionicons name="call" size={14} color="#10B981" />
-                            <Text style={styles.callHospBtnText}>Call</Text>
+                            <Text style={styles.callHospBtnText}>{t('hospitals.call')}</Text>
                           </TouchableOpacity>
                         ) : null}
 
@@ -757,7 +768,7 @@ export default function SymptomCheckerScreen() {
                           }
                           activeOpacity={0.8}
                         >
-                          <Text style={styles.detailsBtnText}>View Details →</Text>
+                          <Text style={styles.detailsBtnText}>{t('hospitals.viewDetails')} →</Text>
                         </TouchableOpacity>
                       </View>
                     </View>
@@ -768,10 +779,10 @@ export default function SymptomCheckerScreen() {
               <View style={styles.noMatchBox}>
                 <Ionicons name="search" size={24} color="#94A3B8" />
                 <Text style={[styles.noMatchTitle, { color: colors.text }]}>
-                  No confirmed specialty matches in {selectedRadius} km
+                  {t('symptoms.noConfirmedMatch', { km: selectedRadius })}
                 </Text>
                 <Text style={[styles.noMatchSub, { color: colors.textSecondary }]}>
-                  You can increase the search radius above or check the additional general & government hospitals below.
+                  {t('symptoms.noConfirmedMatchSub')}
                 </Text>
               </View>
             )}
@@ -785,11 +796,11 @@ export default function SymptomCheckerScreen() {
                 <View style={styles.additionalHeaderRow}>
                   <Ionicons name="business" size={16} color="#64748B" />
                   <Text style={[styles.additionalSectionTitle, { color: colors.text }]}>
-                    Other Nearby Healthcare Facilities ({recommendations.additionalNearby.length})
+                    {t('symptoms.otherNearby')} ({recommendations.additionalNearby.length})
                   </Text>
                 </View>
                 <Text style={[styles.additionalSectionNote, { color: colors.textSecondary }]}>
-                  These general, multispecialty, or government facilities are nearby, but specific department availability should be confirmed by telephone:
+                  {t('symptoms.otherNearbyNote')}
                 </Text>
 
                 <View style={styles.additionalGrid}>
@@ -848,7 +859,7 @@ export default function SymptomCheckerScreen() {
                   >
                     <Ionicons name="map" size={14} color={Palette.primaryBlue} />
                     <Text style={[styles.quickNavBtnText, { color: Palette.primaryBlue }]}>
-                      Open on Map
+                      {t('symptoms.openOnMap')}
                     </Text>
                   </TouchableOpacity>
 
@@ -866,7 +877,7 @@ export default function SymptomCheckerScreen() {
                   >
                     <Ionicons name="list" size={14} color={Palette.primaryBlue} />
                     <Text style={[styles.quickNavBtnText, { color: Palette.primaryBlue }]}>
-                      View All Directory
+                      {t('symptoms.viewDirectory')}
                     </Text>
                   </TouchableOpacity>
 
@@ -877,7 +888,7 @@ export default function SymptomCheckerScreen() {
                   >
                     <Ionicons name="refresh" size={14} color="#64748B" />
                     <Text style={[styles.quickNavBtnText, { color: '#64748B' }]}>
-                      Refresh
+                      {t('common.refresh')}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -890,9 +901,11 @@ export default function SymptomCheckerScreen() {
       {/* Manual Location Selector Modal */}
       <LocationSelectorModal
         visible={showLocationModal}
-        districts={gujaratData.districts || []}
-        currentCity={detectedCity}
-        onSelectLocation={handleSelectManualCity}
+        title={t('home.selectGujaratCity')}
+        data={GUJARAT_CITY_OPTIONS}
+        selectedItem={detectedCity}
+        onSelect={handleSelectManualCity}
+        placeholder={t('common.searchCitiesPlaceholder')}
         onClose={() => setShowLocationModal(false)}
       />
 

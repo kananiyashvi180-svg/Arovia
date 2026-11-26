@@ -18,11 +18,13 @@ import { Palette, Shadows } from '../constants/theme';
 import AroviaHeader from '../components/AroviaHeader';
 import AroviaBottomNav from '../components/AroviaBottomNav';
 import { getFavorites, toggleFavoriteHospital } from '../services/medicalService';
+import { useTranslation } from 'react-i18next';
 
 export default function FavoritesScreen() {
   const router = useRouter();
   const { isAuthenticated, loading: authLoading } = useAuth();
   const { colors, isDark } = useAppTheme();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -96,16 +98,16 @@ export default function FavoritesScreen() {
         }
       >
         <View style={styles.headerInfo}>
-          <Text style={[styles.title, { color: colors.text }]}>Saved Hospitals</Text>
+          <Text style={[styles.title, { color: colors.text }]}>{t('favorites.title')}</Text>
           <Text style={[styles.sub, { color: colors.textSecondary }]}>
-            Quick access to your preferred emergency centers and trusted clinics.
+            {t('favorites.subtitle')}
           </Text>
         </View>
 
         {loading ? (
           <View style={styles.loaderWrap}>
             <ActivityIndicator size="large" color={Palette.primaryBlue} />
-            <Text style={[styles.loaderText, { color: colors.textSecondary }]}>Loading favorites...</Text>
+            <Text style={[styles.loaderText, { color: colors.textSecondary }]}>{t('favorites.loadingFavorites')}</Text>
           </View>
         ) : favorites.length > 0 ? (
           <View style={styles.list}>
@@ -141,7 +143,7 @@ export default function FavoritesScreen() {
                       <Text style={styles.star}>★</Text>
                       <Text style={styles.ratingVal}>{hosp.rating}</Text>
                     </View>
-                    <Text style={styles.viewLink}>View Hospital →</Text>
+                    <Text style={styles.viewLink}>{t('favorites.viewHospital')}</Text>
                   </View>
                 </View>
               </TouchableOpacity>
@@ -150,16 +152,16 @@ export default function FavoritesScreen() {
         ) : (
           <View style={[styles.emptyWrap, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}>
             <Text style={styles.emptyIcon}>💙</Text>
-            <Text style={[styles.emptyTitle, { color: colors.text }]}>No Saved Hospitals</Text>
+            <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('favorites.empty')}</Text>
             <Text style={[styles.emptySub, { color: colors.textSecondary }]}>
-              Tap the heart icon on any hospital profile to save it here for fast emergency lookup.
+              {t('favorites.emptySub')}
             </Text>
             <TouchableOpacity
               style={styles.browseBtn}
               onPress={() => router.push('/hospitals')}
               activeOpacity={0.85}
             >
-              <Text style={styles.browseBtnText}>Explore Hospitals</Text>
+              <Text style={styles.browseBtnText}>{t('favorites.explore')}</Text>
             </TouchableOpacity>
           </View>
         )}

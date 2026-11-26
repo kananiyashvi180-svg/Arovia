@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useAppTheme } from '../context/ThemeContext';
 import { Palette } from '../constants/theme';
+import { useTranslation } from 'react-i18next';
 
 export default function LocationSelectorModal({
   visible,
@@ -19,18 +20,42 @@ export default function LocationSelectorModal({
   data = [],
   selectedItem,
   onSelect,
-  placeholder = 'Search...',
+  placeholder,
+  // Optional legacy props compatibility
+  districts,
+  currentCity,
+  onSelectLocation,
 }) {
   const { colors, isDark } = useAppTheme();
+  const { t } = useTranslation();
   const [search, setSearch] = useState('');
 
-  const filteredData = data.filter((item) => {
+  const isLegacyDistrictMode = Boolean(districts && (!data || data.length === 0));
+  const resolvedData = isLegacyDistrictMode
+    ? districts.flatMap((d) =>
+        (d.cities || []).map((c) => ({
+          name: `${c.name}, ${d.name}`,
+          cityName: c.name,
+          districtName: d.name,
+          city: c,
+        }))
+      )
+    : data;
+  const resolvedSelected = selectedItem ?? currentCity;
+  const resolvedTitle = title || t('home.selectGujaratCity') || 'Select Gujarat City';
+  const resolvedPlaceholder = placeholder || t('common.searchCitiesPlaceholder') || 'Search cities across Gujarat...';
+
+  const filteredData = resolvedData.filter((item) => {
     const textToSearch = typeof item === 'string' ? item : item?.name || '';
     return textToSearch.toLowerCase().includes(search.toLowerCase().trim());
   });
 
   const handleSelectItem = (item) => {
-    onSelect(item);
+    if (isLegacyDistrictMode && onSelectLocation) {
+      onSelectLocation(item);
+    } else if (onSelect) {
+      onSelect(item);
+    }
     setSearch('');
     onClose();
   };
@@ -41,7 +66,7 @@ export default function LocationSelectorModal({
         <SafeAreaView style={[styles.modalBox, { backgroundColor: isDark ? '#0F172A' : '#FFFFFF' }]}>
           {/* Header */}
           <View style={[styles.header, { borderBottomColor: colors.cardBorder }]}>
-            <Text style={[styles.headerTitle, { color: colors.text }]}>{title}</Text>
+            <Text style={[styles.headerTitle, { color: colors.text }]}>{resolvedTitle}</Text>
             <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
               <Text style={[styles.closeIcon, { color: colors.textSecondary }]}>✕</Text>
             </TouchableOpacity>
@@ -58,7 +83,7 @@ export default function LocationSelectorModal({
                   borderColor: colors.cardBorder,
                 },
               ]}
-              placeholder={placeholder}
+              placeholder={resolvedPlaceholder}
               placeholderTextColor="#94A3B8"
               value={search}
               onChangeText={setSearch}
@@ -72,7 +97,7 @@ export default function LocationSelectorModal({
             keyExtractor={(item, index) => (typeof item === 'string' ? item : item?.name || index.toString())}
             renderItem={({ item }) => {
               const itemText = typeof item === 'string' ? item : item?.name;
-              const isSelected = selectedItem === itemText;
+              const isSelected = resolvedSelected === itemText || resolvedSelected === item?.cityName;
 
               return (
                 <TouchableOpacity
@@ -99,7 +124,7 @@ export default function LocationSelectorModal({
             ListEmptyComponent={
               <View style={styles.emptyBox}>
                 <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
-                  No matching locations found
+                  {t('common.noMatchingLocations') || 'No matching locations found'}
                 </Text>
               </View>
             }

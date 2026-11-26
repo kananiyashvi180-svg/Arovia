@@ -20,12 +20,14 @@ import { Palette, Shadows } from '../constants/theme';
 import AroviaBottomNav from '../components/AroviaBottomNav';
 import { getHospitalById, toggleFavoriteHospital, checkIsFavorite } from '../services/medicalService';
 import { isValidHospitalPhone, cleanDialerPhone } from '../utils/phoneValidator';
+import { useTranslation } from 'react-i18next';
 
 export default function HospitalDetailsScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
   const { isAuthenticated, loading: authLoading } = useAuth();
   const { colors, isDark } = useAppTheme();
+  const { t } = useTranslation();
 
   const [hospital, setHospital] = useState(null);
   const [isFav, setIsFav] = useState(false);
@@ -87,8 +89,8 @@ export default function HospitalDetailsScreen() {
       Linking.openURL(`tel:${cleaned}`);
     } else {
       Alert.alert(
-        'Phone Number Unavailable',
-        'A verified direct contact number is not available for this healthcare facility. Please verify with local directory or emergency services.'
+        t('hospitalDetails.phoneUnavailableTitle'),
+        t('hospitalDetails.phoneUnavailableMsg')
       );
     }
   };
@@ -109,7 +111,7 @@ export default function HospitalDetailsScreen() {
     return (
       <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background, justifyContent: 'center', alignItems: 'center' }]}>
         <ActivityIndicator size="large" color={Palette.primaryBlue} />
-        <Text style={[styles.loadingText, { color: colors.textSecondary }]}>Loading Arovia Hospital Record...</Text>
+        <Text style={[styles.loadingText, { color: colors.textSecondary }]}>{t('hospitalDetails.loadingRecord')}</Text>
       </SafeAreaView>
     );
   }
@@ -117,9 +119,9 @@ export default function HospitalDetailsScreen() {
   if (!hospital) {
     return (
       <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background, justifyContent: 'center', alignItems: 'center' }]}>
-        <Text style={{ color: colors.text, fontSize: 16 }}>Hospital record not found.</Text>
+        <Text style={{ color: colors.text, fontSize: 16 }}>{t('hospitalDetails.notFound')}</Text>
         <TouchableOpacity style={styles.backButtonSimple} onPress={() => router.back()}>
-          <Text style={{ color: '#FFFFFF', fontWeight: '700' }}>← Return</Text>
+          <Text style={{ color: '#FFFFFF', fontWeight: '700' }}>{t('hospitalDetails.returnBtn')}</Text>
         </TouchableOpacity>
       </SafeAreaView>
     );
@@ -134,7 +136,7 @@ export default function HospitalDetailsScreen() {
         <TouchableOpacity style={styles.navBackBtn} onPress={() => router.back()} activeOpacity={0.8}>
           <Text style={styles.navBackText}>←</Text>
         </TouchableOpacity>
-        <Text style={styles.navTitle} numberOfLines={1}>Hospital Profile</Text>
+        <Text style={styles.navTitle} numberOfLines={1}>{t('hospitalDetails.title')}</Text>
         <TouchableOpacity style={styles.navFavBtn} onPress={handleToggleFavorite} activeOpacity={0.8}>
           <Text style={styles.navFavIcon}>{isFav ? '❤️' : '🤍'}</Text>
         </TouchableOpacity>
@@ -163,12 +165,12 @@ export default function HospitalDetailsScreen() {
           <View style={styles.statusRow}>
             {hospital.is24x7Emergency ? (
               <View style={styles.emergencyPill}>
-                <Text style={styles.emergencyText}>🚨 24x7 Emergency Care Active</Text>
+                <Text style={styles.emergencyText}>{t('hospitalDetails.emergencyActiveBadge')}</Text>
               </View>
             ) : null}
             {hospital.ayushmanBharatAccepted ? (
               <View style={styles.govtPill}>
-                <Text style={styles.govtText}>🛡️ Ayushman Bharat Accepted</Text>
+                <Text style={styles.govtText}>{t('hospitalDetails.ayushmanAcceptedBadge')}</Text>
               </View>
             ) : null}
           </View>
@@ -183,7 +185,7 @@ export default function HospitalDetailsScreen() {
               >
                 <Text style={styles.actionBtnIcon}>📞</Text>
                 <View style={{ alignItems: 'flex-start' }}>
-                  <Text style={styles.callPrimaryText}>Call Hospital</Text>
+                  <Text style={styles.callPrimaryText}>{t('hospitalDetails.callHospital')}</Text>
                   <Text style={styles.callPrimarySubText}>✓ {hospital.phone || hospital.contactNumber}</Text>
                 </View>
               </TouchableOpacity>
@@ -191,8 +193,8 @@ export default function HospitalDetailsScreen() {
               <View style={[styles.callPrimaryBtn, { backgroundColor: '#64748B', opacity: 0.75 }]}>
                 <Text style={styles.actionBtnIcon}>📞</Text>
                 <View style={{ alignItems: 'flex-start' }}>
-                  <Text style={styles.callPrimaryText}>Unavailable</Text>
-                  <Text style={styles.callPrimarySubText}>No verified number</Text>
+                  <Text style={styles.callPrimaryText}>{t('hospitalDetails.unavailableTitle')}</Text>
+                  <Text style={styles.callPrimarySubText}>{t('hospitalDetails.noVerifiedNum')}</Text>
                 </View>
               </View>
             )}
@@ -203,7 +205,7 @@ export default function HospitalDetailsScreen() {
               activeOpacity={0.85}
             >
               <Text style={styles.actionBtnIcon}>🧭</Text>
-              <Text style={styles.mapPrimaryText}>Get Directions</Text>
+              <Text style={styles.mapPrimaryText}>{t('hospitalDetails.getDirections')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -211,25 +213,25 @@ export default function HospitalDetailsScreen() {
         {/* ── Treatment Cost Estimates ───────────────────────────── */}
         {hospital.treatments && hospital.treatments.length > 0 ? (
           <View style={[styles.contentCard, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>Treatment & Procedure Estimates</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('hospitalDetails.treatments')}</Text>
             <Text style={[styles.sectionSub, { color: colors.textSecondary }]}>
-              Estimated costs verified for this center. Actual charges may vary by room type and complications.
+              {t('hospitalDetails.treatmentsSub')}
             </Text>
 
             <View style={styles.treatmentsList}>
-              {hospital.treatments.map((t, idx) => (
+              {hospital.treatments.map((proc, idx) => (
                 <View key={idx} style={[styles.treatmentRow, { borderBottomColor: colors.cardBorder }]}>
                   <View style={{ flex: 1 }}>
-                    <Text style={[styles.treatmentName, { color: colors.text }]}>{t.treatmentName}</Text>
+                    <Text style={[styles.treatmentName, { color: colors.text }]}>{proc.treatmentName}</Text>
                     <Text style={[styles.recoveryText, { color: colors.textSecondary }]}>
-                      Recovery: {t.recoveryDays}
+                      {t('hospitalDetails.recovery')}: {proc.recoveryDays}
                     </Text>
                   </View>
                   <View style={{ alignItems: 'flex-end' }}>
                     <Text style={styles.treatmentPrice}>
-                      ₹{t.minCost.toLocaleString('en-IN')} - ₹{t.maxCost.toLocaleString('en-IN')}
+                      ₹{proc.minCost.toLocaleString('en-IN')} - ₹{proc.maxCost.toLocaleString('en-IN')}
                     </Text>
-                    <Text style={styles.treatmentEstimateLabel}>Avg. Package</Text>
+                    <Text style={styles.treatmentEstimateLabel}>{t('hospitalDetails.avgPackage')}</Text>
                   </View>
                 </View>
               ))}
@@ -239,7 +241,7 @@ export default function HospitalDetailsScreen() {
 
         {/* ── Specialties Available ──────────────────────────────── */}
         <View style={[styles.contentCard, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>Medical Specialties</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('hospitalDetails.specialties')}</Text>
           <View style={styles.specialtiesGrid}>
             {hospital.specialties?.map((sp) => (
               <View key={sp} style={[styles.specPill, { backgroundColor: isDark ? '#0B132B' : '#EFF6FF' }]}>
@@ -251,7 +253,7 @@ export default function HospitalDetailsScreen() {
 
         {/* ── Facilities & Amenities ─────────────────────────────── */}
         <View style={[styles.contentCard, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>Facilities & Technology</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('hospitalDetails.facilities')}</Text>
           <View style={styles.facilitiesGrid}>
             {hospital.facilities?.map((f) => (
               <View key={f} style={[styles.facilityPill, { backgroundColor: isDark ? '#0B132B' : '#F1F5F9' }]}>
@@ -264,8 +266,8 @@ export default function HospitalDetailsScreen() {
         {/* ── Emergency Contact Card ──────────────────────────────── */}
         <View style={styles.emergencyCard}>
           <View style={{ flex: 1 }}>
-            <Text style={styles.emergencyCardTitle}>🚨 Emergency Helpline</Text>
-            <Text style={styles.emergencyCardSub}>Available 24x7 — Gujarat Ambulance Service</Text>
+            <Text style={styles.emergencyCardTitle}>🚨 {t('hospitalDetails.emergencyHelpline')}</Text>
+            <Text style={styles.emergencyCardSub}>{t('hospitalDetails.emergencyAvailable')}</Text>
           </View>
           <TouchableOpacity
             style={styles.emergencyCallBtn}

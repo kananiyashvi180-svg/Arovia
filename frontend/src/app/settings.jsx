@@ -200,8 +200,8 @@ export default function SettingsScreen() {
           <SectionHeader title={t('settings.notifications')} />
 
           {[
-            { key: 'push', icon: '🔔', label: t('settings.pushNotifications'), desc: 'Requires device notification permission' },
-            { key: 'email', icon: '📧', label: t('settings.emailAlerts'), desc: 'Requires backend email configuration' },
+            { key: 'push', icon: '🔔', label: t('settings.pushNotifications'), desc: t('settings.pushDesc') },
+            { key: 'email', icon: '📧', label: t('settings.emailAlerts'), desc: t('settings.emailDesc') },
             { key: 'hospitalUpdates', icon: '🏥', label: t('settings.hospitalUpdates'), desc: null },
             { key: 'appointmentReminders', icon: '📅', label: t('settings.appointmentReminders'), desc: null },
             { key: 'healthAlerts', icon: '💊', label: t('settings.healthAlerts'), desc: null },

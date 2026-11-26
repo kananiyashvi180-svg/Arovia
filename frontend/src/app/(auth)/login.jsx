@@ -15,12 +15,14 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useAuth } from '../../context/AuthContext';
 import { useAppTheme } from '../../context/ThemeContext';
 import { Palette } from '../../constants/theme';
+import { useTranslation } from 'react-i18next';
 
 export default function LoginScreen() {
   const router = useRouter();
   const { message, redirect } = useLocalSearchParams();
   const { login } = useAuth();
   const { colors, isDark } = useAppTheme();
+  const { t } = useTranslation();
 
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
@@ -30,7 +32,7 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     if (!identifier.trim() || !password) {
-      setErrorMsg('Please enter your email or 10-digit mobile number and password.');
+      setErrorMsg(t('auth.enterCredentialsError'));
       return;
     }
 
@@ -45,7 +47,7 @@ export default function LoginScreen() {
       console.warn('Login error:', err.response?.data || err.message);
       const serverMsg = typeof err.response?.data === 'object' && err.response?.data?.message
         ? err.response.data.message
-        : 'Invalid credentials or connection error. Please try again.';
+        : t('auth.invalidCredentialsOrNetwork');
       setErrorMsg(serverMsg);
     } finally {
       setLoading(false);
@@ -64,9 +66,9 @@ export default function LoginScreen() {
             <View style={styles.logoBadge}>
               <Text style={styles.logoIcon}>💙</Text>
             </View>
-            <Text style={[styles.brandTitle, { color: colors.text }]}>Arovia</Text>
+            <Text style={[styles.brandTitle, { color: colors.text }]}>{t('common.appName')}</Text>
             <Text style={[styles.brandSubtitle, { color: colors.textSecondary }]}>
-              AI Healthcare Navigator
+              {t('home.tagline')}
             </Text>
           </View>
 
@@ -80,9 +82,9 @@ export default function LoginScreen() {
               },
             ]}
           >
-            <Text style={[styles.welcomeTitle, { color: colors.text }]}>Welcome Back</Text>
+            <Text style={[styles.welcomeTitle, { color: colors.text }]}>{t('nav.welcomeBack')}</Text>
             <Text style={[styles.welcomeSubtitle, { color: colors.textSecondary }]}>
-              Sign in to access your healthcare profile, saved hospitals, and consultation history.
+              {t('auth.loginSubtitle')}
             </Text>
 
             {/* Contextual notification banner if redirected from saved hospital */}
@@ -100,7 +102,7 @@ export default function LoginScreen() {
 
             {/* Identifier field */}
             <View style={styles.fieldGroup}>
-              <Text style={[styles.label, { color: colors.text }]}>Email or Mobile Number</Text>
+              <Text style={[styles.label, { color: colors.text }]}>{t('auth.emailOrMobileLabel')}</Text>
               <TextInput
                 style={[
                   styles.input,
@@ -110,7 +112,7 @@ export default function LoginScreen() {
                     borderColor: colors.cardBorder,
                   },
                 ]}
-                placeholder="name@example.com or 9876543210"
+                placeholder={t('auth.emailOrMobilePlaceholder')}
                 placeholderTextColor="#94A3B8"
                 autoCapitalize="none"
                 value={identifier}
@@ -120,7 +122,7 @@ export default function LoginScreen() {
 
             {/* Password field */}
             <View style={styles.fieldGroup}>
-              <Text style={[styles.label, { color: colors.text }]}>Password</Text>
+              <Text style={[styles.label, { color: colors.text }]}>{t('auth.password')}</Text>
               <View
                 style={[
                   styles.passwordWrap,
@@ -132,7 +134,7 @@ export default function LoginScreen() {
               >
                 <TextInput
                   style={[styles.passwordInput, { color: colors.text }]}
-                  placeholder="Enter your password"
+                  placeholder={t('auth.passwordPlaceholder')}
                   placeholderTextColor="#94A3B8"
                   secureTextEntry={!showPassword}
                   value={password}
@@ -158,7 +160,7 @@ export default function LoginScreen() {
               {loading ? (
                 <ActivityIndicator color="#FFFFFF" size="small" />
               ) : (
-                <Text style={styles.loginBtnText}>Sign In</Text>
+                <Text style={styles.loginBtnText}>{t('auth.loginBtn')}</Text>
               )}
             </TouchableOpacity>
 
@@ -168,7 +170,7 @@ export default function LoginScreen() {
               onPress={() => router.replace('/')}
             >
               <Text style={[styles.guestLinkText, { color: colors.textSecondary }]}>
-                Continue as Guest on Dashboard →
+                {t('auth.continueAsGuest')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -176,7 +178,7 @@ export default function LoginScreen() {
           {/* Footer sign up redirect */}
           <View style={styles.footerRow}>
             <Text style={[styles.footerText, { color: colors.textSecondary }]}>
-              Don't have an Arovia account?{' '}
+              {t('auth.noAccount')}{' '}
             </Text>
             <TouchableOpacity
               onPress={() =>
@@ -186,7 +188,7 @@ export default function LoginScreen() {
                 })
               }
             >
-              <Text style={[styles.signupLink, { color: Palette.primaryBlue }]}>Sign Up</Text>
+              <Text style={[styles.signupLink, { color: Palette.primaryBlue }]}>{t('auth.signUp')}</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

@@ -66,6 +66,50 @@ export function findNearestGujaratDistrict(lat, lon) {
   return best;
 }
 
+// Unified flat list of cities across all 33 Gujarat districts
+export const GUJARAT_CITY_OPTIONS = gujaratData.districts.flatMap((d) =>
+  d.cities.map((c) => ({
+    name: `${c.name}, ${d.name}`,
+    cityName: c.name,
+    districtName: d.name,
+    taluka: c.taluka,
+  }))
+);
+
+/**
+ * Find approximate Gujarat district centroid coordinates for a city or district name
+ * Used as fallback when device geocoder is unavailable for a manually selected city.
+ */
+export function findCentroidByCityOrDistrict(cityName = '', districtName = '') {
+  const normCity = normalizeStr(cityName);
+  const normDist = normalizeStr(districtName);
+
+  if (normDist) {
+    const byDist = GUJARAT_DISTRICT_CENTROIDS.find(
+      (d) => normalizeStr(d.name) === normDist || normalizeStr(d.name).includes(normDist) || normDist.includes(normalizeStr(d.name))
+    );
+    if (byDist) return byDist;
+  }
+
+  if (normCity) {
+    const byPrimary = GUJARAT_DISTRICT_CENTROIDS.find(
+      (d) => normalizeStr(d.primaryCity) === normCity || normCity.includes(normalizeStr(d.primaryCity))
+    );
+    if (byPrimary) return byPrimary;
+
+    for (const d of gujaratData.districts) {
+      if (d.cities.some((c) => normalizeStr(c.name) === normCity || normCity.includes(normalizeStr(c.name)))) {
+        const matchedCentroid = GUJARAT_DISTRICT_CENTROIDS.find(
+          (c) => normalizeStr(c.name) === normalizeStr(d.name)
+        );
+        if (matchedCentroid) return matchedCentroid;
+      }
+    }
+  }
+
+  return null;
+}
+
 function normalizeStr(str) {
   if (!str) return '';
   return str.toLowerCase().replace(/[^a-z0-9]/g, '');
